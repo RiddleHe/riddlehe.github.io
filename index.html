@@ -48,8 +48,8 @@
                             <h5 class="card-title text-dark py-2">Muyu He</h5>
                         </div>
                         <ul class="list-group list-group-flush px-4 text-start ms-2">
-                            <li class="list-group-item text-muted">Recent philosophy graduate from UCLA. Full-stack developer in Python and Java.</li>
-                            <li class="list-group-item text-muted">Los Angeles, California</li>
+                            <li class="list-group-item text-muted">Grad student in UPenn Engineering. Machine learning engineer.</li>
+                            <li class="list-group-item text-muted">Philadelphia, Pennsylvania</li>
                             <li class="list-group-item">
                                 <i class="bi bi-envelope me-2"></i> 
                                 <a target="_blank" href="mailto:muyuhe0327@gmail.com" class="text-decoration-none text-muted">Email</a>
@@ -75,8 +75,30 @@
                         <hr />
                         <div>
                             <div class="d-flex align-items-center">
+                                <h5 class="text-dark mt-3 pe-3">Tiny transformer</h5> 
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/TinyTransformer">View repository</a></button>
+                            </div>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li><strong class="text-muted">Technologies:</strong> PyTorch, transformer, self-attention</li>
+                                <li>Developed a transformer model that predicts the next character based on learning the previous 256 tokens. Using self-attention heads and feed forward layers, the model learns 10 million weights about the affinities between tokens. </li>
+                                <li>Achieved a cross entropy loss of 0.9 and 1.5 on train and validation sets with optimization techniques including layer normalization and residual connections, capable of generating text samples in the style of any writer (such as JK Rowling). </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <h5 class="text-dark mt-3 pe-3">Name generator</h5> 
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/NameGenerator">View repository</a></button>
+                            </div>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li><strong class="text-muted">Technologies:</strong> PyTorch, multi-layered perceptron</li>
+                                <li>Developed a multi-layered perceptron language model that generates name-like sequences based on learning the previous 8 tokens given a training set of 10k names, written in my own APIs (using only PyTorch’s tensor objects).  </li>
+                                <li>Achieved a cross entropy loss of 2.0 on train and validation sets with optimization techniques including batch normalization, non-linear activations, and using not fully connected dilated hidden layers. </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
                                 <h5 class="text-dark mt-3 pe-3">Quiz Academy</h5> 
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/quiz_academy">View repository</a></button>
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/QuizAcademy">View repository</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
                                 <li><strong class="text-muted">Technologies:</strong> Python, Django, HTML, Bootstrap</li>
@@ -87,23 +109,12 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <h5 class="text-dark mt-3 pe-3">Content aggregator</h5> 
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/content_aggregator">View repository</a></button>
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/ContentAggregator">View repository</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
                                 <li><strong class="text-muted">Technologies:</strong> Python, Django, HTML, feedparser, requests</li>
                                 <li>Developed an algorithm to automatically generate articles, headlines, and navigation bars from users’ favorite websites, utilizing class composition to ensure the deadlines were correct.</li>
                                 <li>Built the feature for users to scrape and update articles from other websites within a few clicks, using Django custom commands to automatically update data.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="d-flex align-items-center">
-                                <h5 class="text-dark mt-3 pe-3">Philosophy Wikipedia</h5> 
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/philos_pedia">View repository</a></button>
-                            </div>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li><strong class="text-muted">Technologies:</strong> Python, Django, HTML, CSS</li>
-                                <li>Deployed a Wikipedia app for users to create and edit topics and entries, adding well-defined user access such as customized error pages and various levels of user access to content.</li>
-                                <li>Built an algorithm for users to search, rank, and browse in-app content by interacting with query sets and POST request data.</li>
                             </ul>
                         </div>
                     </div>
@@ -113,24 +124,24 @@
                         <h3 class="text-dark">Coursework</h3>
                         <hr />
                         <div>
+                            <h5 class="text-dark mt-3 pe-3">Convolutional Neural Network</h5>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li><strong class="text-muted">Covered topics:</strong> Convolutional operation, max and average pooling, image recognition.</li>
+                                <li><strong class="text-muted">Project:</strong> Used both a manually implemented convolutional network and TensorFlow's functional API to train a model that classfies sign languages into digits.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-dark mt-3 pe-3">Neural Networks: From Zero to Hero</h5>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li><strong class="text-muted">Covered topics:</strong> Transformer, self-attention heads, multi-layered perceptrons, batch and layer normalization.</li>
+                                <li><strong class="text-muted">Project:</strong> Used transformer and self-attention to create a GPT that generates characters based on a given author's style of writing. </li>
+                            </ul>
+                        </div>
+                        <div>
                             <h5 class="text-dark mt-3 pe-3">Natural Language Processing with Classification and Vector Spaces</h5>
                             <ul class="d-grid gap-3 mt-3">
                                 <li><strong class="text-muted">Covered topics:</strong> Logistic regression, Naive Bayes, gradient descent, text prepossessing.</li>
                                 <li><strong class="text-muted">Project:</strong> Used logistic regression to predict tweet sentiments based on 10,000 tweets, minimizing the cost by updating weights with gradient descent. </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="text-dark mt-3 pe-3">Crash Course on Python</h5>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li><strong class="text-muted">Covered topics:</strong> Object-oriented programming, lists, tuples, strings, dictionaries.</li>
-                                <li><strong class="text-muted">Project:</strong> Used composition techniques to interact with multiple classes to create a word cloud generator, prepossesing a text file with 12,000 words with loops and dictionaries. </li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h5 class="text-dark mt-3 pe-3">Learn Java Programming</h5>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li><strong class="text-muted">Covered topics:</strong> Object-oriented programming, arrays, array lists, 2D arrays, polymorphism.</li>
-                                <li><strong class="text-muted">Project:</strong> Used a 2D arrays of pixels to crop, stretch, and change the color of multiple image file with 90,000 pixels. </li>
                             </ul>
                         </div>
                     </div>
