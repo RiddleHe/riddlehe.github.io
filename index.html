@@ -65,7 +65,7 @@
                 <section class="container mt-3">
                     <div class="row text-start">
                         <h3 class="text-dark">About Me</h3>
-                        <p class="mt-3 ps-3">I’m an incoming grad student at University of Pennsylvania's School of Engineering and a recent Summa Cum Laude graduate at University of California, Los Angeles. Before stepping into computer science, I was ranked as UCLA's top 3 philosophy undergraduate in 2022. Prompted by my research in artificial intelligence, I am now committed to become a machine learning engineer and full-stack developer.</p>
+                        <p class="mt-3 ps-3">I’m a grad student at University of Pennsylvania's School of Engineering and a recent Summa Cum Laude graduate at University of California, Los Angeles. Before stepping into computer science, I was ranked as UCLA's top 3 philosophy undergraduate in 2022. Prompted by my research in artificial intelligence, I am now committed to become a machine learning engineer and full-stack developer.</p>
                         <p class="mt-3 ps-3">My primary programming languages are Python and Java. My projects make use of natural language processing, computer vision, transformer, and convolutional neural networks.</p>
                     </div>
                 </section>
@@ -79,9 +79,12 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://cogcomp.seas.upenn.edu/">Website</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Innovatively developed a dataset of 100 entries as one of the first baselines to train image generation AIs on commonsense tasks, comparing model outputs on a pair of 3 commonsense-related prompts</li>
-                                <li>Orchestrated performance comparison by a variety of models, including Stable Diffusion, Dall-E, and Midjourney, running models automatically via linux and evaluating their performance against a pre-defined criteria</li>
-                                <li>Actively led ongoing research regarding 20+ state-of-the-art diffusion models, including pix2pix, DreamBooth, and DiffEdit, on their ability to generate and edit images</li>
+                                <li>Led a team of 3 researchers to spearhead one of the first evaluation methods of how well image generation models perform
+                                    on common sense tasks</li>
+                                <li>Designed a comprehensive dataset containing 6 common sense categories and 150 pairs of contrasting prompts to compare
+                                    models’ common sense to human baseline</li>
+                                <li>Created several novel evaluation metrics to succinctly generate a score of primary image generation models such as Dalle3
+                                    and Stable Diffusion XL, revealing major shortcomings in current generative models</li>
                             </ul>
                         </div>
                         <div>
@@ -90,8 +93,10 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://www.stackmatix.com/">Website</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Drove 8k views and 200 likes per post for one major finance client through creative content on Tik Tok and Instagram</li>
-                                <li>Enhanced relationships with 20+ finance influencers, initiating brand collaborations twice a week and acquiring 12k views per post</li>
+                                <li>Performed daily data preprocessing of 20+ news entries for social media clients to share their content across platforms</li>
+                                <li>Maintained a data scraping algorithm to parse news content from 10+ media outlets such as Bloomberg and NBC and store
+                                    them as JSON objects</li>
+                                <li>Achieve 10% improvement in the speed of content publishing</li>
                             </ul>
                         </div>
                     </div>
@@ -106,18 +111,23 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/UNet">View repo</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Implemented from scratch an image segmentation model capable of segmenting an image into 30 classes, achieving a cross entropy loss of 0.39 after training on 1060 images</li>
-                                <li>Engineered a U-Net architecture capable of upsample compressed images by connecting 4 layers of transposed convolutions with 4 residual connections, recovering the original 96x128 images successfully</li>
+                                <li>Implemented an image segmentation model that can segment landscape photos into 30 classes including trees and roads</li>
+                                <li>Designed a U-Net architecture with 4 transposed convolution layers and 4 residual connections to upsample compressed
+                                    images to recover the original 96x128 size</li>
+                                <li>Achieved a satisfactory cross entropy loss of 0.39 after training on 1k+ images</li>
                             </ul>
                         </div>
                         <div>
                             <div class="d-flex align-items-center">
-                                <h5 class="text-dark mt-3 pe-3">Tiny Transformer</h5> 
+                                <h5 class="text-dark mt-3 pe-3">Tiny Transformer</h5>
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/TinyTransformer">View repo</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Devised a language model capable of generating text in the style of JK Rowling, achieving a cross entropy loss of 0.9 and 1.5 on train and validation sets</li>
-                                <li>Constructed a transformer architecture to predict the next character based on the previous 256 tokens, using self-attention heads and feed forward layers to learn 10 million weights about the affinities between tokens successfully</li>
+                                <li>Created a language model that can generate text in the style of an author given that his work, such as Shakespeare or
+                                    Wittgenstein</li>
+                                <li>Constructed a transformer architecture with 10 million weights using self-attention heads and feed forward layers to predict
+                                    the next character based on the previous 256 character tokens</li>
+                                <li>Achieved a significant cross entropy loss of 0.9 and 1.5 on train and validation sets</li>
                             </ul>
                         </div>
                         <div>
@@ -127,8 +137,9 @@
                             </div>
                             <ul class="d-grid gap-3 mt-3">
                                 <li><strong class="text-muted">Technologies:</strong> PyTorch, multi-layered perceptron</li>
-                                <li>Designed a complete web application with Django, HTML and Bootstrap to auto-update the user’s favorite feeds and generate new web pages, navigation bars, and links</li>
-                                <li>Developed an algorithm with requests and feedparser to automatically scrape and update RSS feeds from other websites</li>
+                                <li>Designed a web application with Django, HTML and CSS to automatically update the user’s favorite news feeds in the app</li>
+                                <li>Developed an algorithm with Python’s requests and feedparser to automatically scrape RSS feeds from other websites</li>
+                                <li>Interacted with the database using SQLite to iteratively generate new pages, navigation bars, and links given updated feeds</li>
                             </ul>
                         </div>
                     </div>
