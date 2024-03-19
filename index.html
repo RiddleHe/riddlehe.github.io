@@ -80,12 +80,10 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://cogcomp.seas.upenn.edu/">Website</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Led a team of 3 researchers to spearhead one of the first evaluation methods of how well image generation models perform
-                                    on common sense tasks</li>
-                                <li>Designed a comprehensive dataset containing 6 common sense categories and 200 pairs of contrasting prompts to compare
-                                    models’ common sense to human baseline</li>
-                                <li>Created several novel evaluation metrics to succinctly generate a score of primary image generation models such as Dalle3
-                                    and Stable Diffusion XL, revealing major shortcomings in current generative models</li>
+                                <li>Led a team of three to compile the first dataset to test 4 leading models’ ability to generate images grounded in common sense</li>
+                                <li>Designed a JSON-formatted data collection across 6 common sense categories and 200 image prompts, evaluating the cosine similarity between the generated images and the correct text content using CLIP and Clipscore, arriving at 2 independent score metrics with only a 3% disagreement rate with human evaluation</li>
+                                <li>Constructed an automated data pipeline, from using few shot prompting on GPT-4 to generate 100+ data entries per batch, to serializing and sending all data to a remote Linux server, to generating and evaluating 4 image variations of each prompt</li>
+                                <li>Innovated multiple auto-evaluation algorithms, scoring the performances of Dalle3, Dalle3+GPT, Stable Diffusion XL, and SD 2.1, revealing their major shortcomings including the inability to depict unusual scenes and the lack of basic physical knowledge</li>
                             </ul>
                         </div>
                         <div>
@@ -94,10 +92,9 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://www.stackmatix.com/">Website</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Performed daily data preprocessing of 20+ news entries for social media clients to share their content across platforms</li>
-                                <li>Maintained a data scraping algorithm to parse news content from 10+ media outlets such as Bloomberg and NBC and store
-                                    them as JSON objects</li>
-                                <li>Achieve 10% improvement in the speed of content publishing</li>
+                                <li>Extracted 20+ news entries from the web daily and shared over 1000+ entries in total on social accounts with 50k followers</li>
+                                <li>Designed a web scraping algorithm with feedparser to automatically extract and parse finance news from 10+ media outlets, serializing the articles’ title, theme, and content in JSON format and sharing the content across 5+ social media platforms</li>
+                                <li>Sped up clients’ content creation process by 10%, going from publishing on social media twice a week to six times a week</li>
                             </ul>
                         </div>
                     </div>
@@ -112,12 +109,22 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://mindscape-philos.com">Use App</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Innovated a full-stack philosophy web platform using Next.js, enabling users to consult 10+ philosophers such as Plato and
-                                    Socrates on philosophical questions</li>
-                                <li>Enhanced the backend with a vector database that embeds 10k+ encyclopedia text data, augmenting the large language
-                                    model’s relevant knowledge base by 200% to provide professional responses</li>
-                                <li>Supercharged GPT with external long-term memory using the data structure server Redis, cutting GPT’s token usages and
-                                    boosting the response efficiency by 70%</li>
+                                <li>Implemented a Next.js philosophy chatbot platform, enabling users to create and chat with an indefinite number of philosopher chatbots by storing the models in a SQL-based Prisma database and routing users’ queries to GPT-4’s API</li>
+                                <li>Created a rich external knowledge base by recursively preprocessed 500+ web pages from Stanford Encyclopedia of Philosophy with requests and BeautifulSoup, splitting the texts into 46000+ chunks of data and upserting them to a Pinecone vector database</li>
+                                <li>Improved the quality and accuracy of chatbots’ responses by using similarity search to return the top 3 text chunks most relevant to the users’ query within 0-1 second, surpassing native GPT’s user satisfaction rate in a report by 10+ users</li>
+                                <li>Enabled chatbots to have long-term memories about user conversations by storing the most recent 30+ chat messages into Redis and embedding them into the chatbot’s prompt in realtime, preventing the chatbots’ memory loss due to interrupted API calls</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
+                                <h5 class="text-dark mt-3 pe-3">Content Aggregator</h5>
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/ContentAggregator">View repo</a></button>
+                            </div>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li><strong class="text-muted">Technologies:</strong> PyTorch, multi-layered perceptron</li>
+                                <li>Built a Django app that parses and renders articles from 50+ websites’ RSS feeds on native pages in 0-2 seconds in real time</li>
+                                <li>Designed two Django view functions to query the SQLite database, filter articles according to their themes and content, and present articles in sorted order on the web page with automatically generated navigation bars, URLs, and buttons</li>
+                                <li>Wrote custom Django commands using django-apscheduler to automatically extract the newest articles from websites and update the articles on the web pages according to a user-defined schedule (typically a day)</li>
                             </ul>
                         </div>
                         <div>
@@ -126,23 +133,10 @@
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/TinyTransformer">View repo</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Created a language model that can generate text in the style of an author given that his work, such as Shakespeare or
-                                    Wittgenstein</li>
-                                <li>Constructed a transformer architecture with 10 million weights using self-attention heads and feed forward layers to predict
-                                    the next character based on the previous 256 character tokens</li>
-                                <li>Achieved a significant cross entropy loss of 0.9 and 1.5 on train and validation sets</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="d-flex align-items-center">
-                                <h5 class="text-dark mt-3 pe-3">Content Aggregator</h5> 
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/ContentAggregator">View repo</a></button>
-                            </div>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li><strong class="text-muted">Technologies:</strong> PyTorch, multi-layered perceptron</li>
-                                <li>Designed a web application with Django, HTML and CSS to automatically update the user’s favorite news feeds in the app</li>
-                                <li>Developed an algorithm with Python’s requests and feedparser to automatically scrape RSS feeds from other websites</li>
-                                <li>Interacted with the database using SQLite to iteratively generate new pages, navigation bars, and links given updated feeds</li>
+                                <li>Created a transformer model in PyTorch with 16 million tokens capable of generating text in a target author’s writing style</li>
+                                <li>Preprocessed the complete work of Shakespeare with 1.2 million text tokens, mapping automatically chunking the text into batches of 32 token sequences, each containing 200 integer tokens, to serve as input to the transformer model</li>
+                                <li>Manually implemented 6 blocks of multi-head attention layers and feed-forward layers in the model, enabling the model to understand the semantic relation between the tokens, adding residual connections and layer normalization to prevent gradient vanishing</li>
+                                <li>Successfully achieved a cross-entropy loss of 0.9 on the training set and 1.5 on the validation set after 4000 iterations of mini-batch gradient descent using the Adam optimizer, approaching the authentic writing styles of the target author</li>
                             </ul>
                         </div>
                     </div>
