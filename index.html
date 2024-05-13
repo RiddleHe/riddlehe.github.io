@@ -76,14 +76,30 @@
                         <hr />
                         <div>
                             <div class="d-flex align-items-center">
+                                <h5 class="text-dark mt-3 pe-3">SenseTime</h5>
+                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://www.sensetime.com/en">Website</a></button>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <h6 class="text-secondary mt-3 pe-3">Machine learning engineer intern | Research and development of the GUI agent</h6>
+                            </div>
+                            <ul class="d-grid gap-3 mt-3">
+                                <li>Fine-tuned the LLM base of two multi-modal large language models (7B and 1B parameters) with 60k data samples on 32 V100 GPUs on phone screen navigation tasks, achieving 75% accuracy in multi-step predictions of music-app-related actions</li>
+                                <li>Innovated an automatic data generation pipeline that created 2k UI screen data samples for fine-tuning tasks, leveraging opencv to synthesize android screens and in-app designs, surpassing traditional web scraping and manual labeling methods 20 times in speed</li>
+                                <li>Iterated the fine-tuning procedures from merely generating action predictions to also producing Chain-of-Thought data including observations, action logic, and predicted results, validating ideas with 5+ similar pipelines like ScreenAgent and MobileAgent</li>
+                                <li>Took full ownership of the automatic generation of Chain-of-Thought data as training output for a 20B MLLM model, running GPT4V to generate 10k instances in 20+ parallel subprocesses, improving model accuracy on multiple benchmarks by 15%</li>
+                                <li>Creatively implemented another data pipeline that randomly combined 15k authentic screenshots into 3k simulated screen operation data, using ui-animator to navigate Android apps and GPT4V to generate corresponding metadata</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center">
                                 <h5 class="text-dark mt-3 pe-3">Cognitive Computation Group @ UPenn</h5> 
                                 <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://cogcomp.seas.upenn.edu/">Website</a></button>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Led a team of three to compile the first dataset to test 4 leading models’ ability to generate images grounded in common sense</li>
-                                <li>Designed a JSON-formatted data collection across 6 common sense categories and 200 image prompts, evaluating the cosine similarity between the generated images and the correct text content using CLIP and Clipscore, arriving at 2 independent score metrics with only a 3% disagreement rate with human evaluation</li>
-                                <li>Constructed an automated data pipeline, from using few shot prompting on GPT-4 to generate 100+ data entries per batch, to serializing and sending all data to a remote Linux server, to generating and evaluating 4 image variations of each prompt</li>
-                                <li>Innovated multiple auto-evaluation algorithms, scoring the performances of Dalle3, Dalle3+GPT, Stable Diffusion XL, and SD 2.1, revealing their major shortcomings including the inability to depict unusual scenes and the lack of basic physical knowledge</li>
+                                <li>Led a team of three to compile the first benchmark to test diffusion models’ ability to generate images grounded in common sense</li>
+                                <li>Designed a dataset across 6 common sense categories containing 200 pairs of image prompts, following up with an automatic evaluation process to use CLIP to compute cosine similarity between generated images and ground truth</li>
+                                <li>Constructed an automatic data pipeline from few-shot prompting GPT-4 to generate 200+ prompts per batch, to serializing and transferring prompts to remote GPU pools as model inputs, to generating and evaluating 4 variations of each prompt in parallel</li>
+                                <li>Innovated 2 automatic scoring metrics on 4 SOTA models that only diverges from human evaluations by 3%, revealing major shortcomings in new Dall-E and Stable Diffusion models including the lack of basic physical and spatial common sense</li>
                             </ul>
                         </div>
                         <div>
@@ -94,7 +110,6 @@
                             <ul class="d-grid gap-3 mt-3">
                                 <li>Extracted 20+ news entries from the web daily and shared over 1000+ entries in total on social accounts with 50k followers</li>
                                 <li>Designed a web scraping algorithm with feedparser to automatically extract and parse finance news from 10+ media outlets, serializing the articles’ title, theme, and content in JSON format and sharing the content across 5+ social media platforms</li>
-                                <li>Sped up clients’ content creation process by 10%, going from publishing on social media twice a week to six times a week</li>
                             </ul>
                         </div>
                     </div>
