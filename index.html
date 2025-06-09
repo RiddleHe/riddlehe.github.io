@@ -48,7 +48,7 @@
                             <h5 class="card-title text-dark py-2">Muyu He</h5>
                         </div>
                         <ul class="list-group list-group-flush px-4 text-start ms-2">
-                            <li class="list-group-item text-muted">Grad student in Penn Engineering. Focusing on Machine learning.</li>
+                            <li class="list-group-item text-muted">Graduated from Penn Engineering. Machine learning engineer.</li>
                             <li class="list-group-item text-muted">Philadelphia, Pennsylvania</li>
                             <li class="list-group-item">
                                 <i class="bi bi-envelope me-2"></i> 
@@ -65,10 +65,10 @@
                 <section class="container mt-3">
                     <div class="row text-start">
                         <h3 class="text-dark">About Me</h3>
-                        <p class="mt-3 ps-3">I’m a computer science grad student at the University of Pennsylvania's School of Engineering. I am currently working as a machine learning engineer intern at SenseTime, developing the next generation of multi-modal smartphone assistants.</p>
+                        <p class="mt-3 ps-3">I’m a computer science grad student at the University of Pennsylvania's School of Engineering. I am currently doing research in diffusion generation and LLM inference in Penn and Draxel.</p>
                         <p class="mt-3 ps-3">Before studying at Penn, I was a philosophy Summa Cum Laude graduate at the University of California, Los Angeles, ranked as the school's top 3 philosophy undergraduate in 2022.</p>
-                        <p class="mt-3 ps-3">My main interest is in deep learning and artificial intelligence, particularly visual question-answering tasks related to multi-modal large language models and image generation tasks related to diffusion models.</p>
-                        <p class="mt-3 ps-3">In my free time, I'm two content creators on China's biggest social media, RED, as a philosophy educator (25k followers) and a musician (8k).</p>
+                        <p class="mt-3 ps-3">I am interested in the reasoning and planning abilities of multi-modal models, be it LLMs or diffusion models, so my work has been focused on developing frameworks / benchmarks to improve those abilities on downstream tasks including embodied AI and image generation.</p>
+                        <p class="mt-3 ps-3">In my free time, I'm two content creators on China's biggest social media, RED, as a philosophy educator (25k followers) and a musician (15k).</p>
                     </div>
                 </section>
                 <section class="container mt-3">
@@ -82,68 +82,57 @@
                                     <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://www.sensetime.com/en">Website</a></button>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <p class="text-secondary mt-3">Apr 2024 - Present</p>
+                                    <p class="text-secondary mt-3">Apr 2024 - July 2024</p>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
-                                <h6 class="text-secondary mt-1">Machine learning engineer intern | Research and development of the GUI agent</h6>
+                                <h6 class="text-secondary mt-1">Machine Learning Engineer Intern | Research on the VLM-based GUI agent</h6>
                             </div>
                             <ul class="d-grid gap-3 mt-2">
-                                <li>Fine-tuned the LLM base of two multi-modal large language models (7B and 1B parameters) with 60k data samples on 32 V100 GPUs on phone screen navigation tasks, achieving 75% accuracy in multi-step predictions of music-app-related actions</li>
-                                <li>Innovated an automatic data generation pipeline that created 2k UI screen data samples for fine-tuning tasks, leveraging opencv to synthesize android screens and in-app designs, surpassing traditional web scraping and manual labeling methods 20 times in speed</li>
-                                <li>Iterated the fine-tuning procedures from merely generating action predictions to also producing Chain-of-Thought data including observations, action logic, and predicted results, validating ideas with 5+ similar pipelines like ScreenAgent and MobileAgent</li>
-                                <li>Took full ownership of the automatic generation of Chain-of-Thought data as training output for a 20B MLLM model, running GPT4V to generate 10k instances in 20+ parallel subprocesses, improving model accuracy on multiple benchmarks by 15%</li>
-                                <li>Creatively implemented another data pipeline that randomly combined 15k authentic screenshots into 3k simulated screen operation data, using ui-animator to navigate Android apps and GPT4V to generate corresponding metadata</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="text-dark mt-2 pe-3">Cognitive Computation Group @ UPenn</h5>
-                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://cogcomp.seas.upenn.edu/">Website</a></button>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <p class="text-secondary mt-3">July 2023 - Mar 2024</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <h6 class="text-secondary mt-1">Research Assistant | Research on Text-to-Image Generation</h6>
-                            </div>
-                            <ul class="d-grid gap-3 mt-2">
-                                <li>Led a team of three to compile the first benchmark to test diffusion models’ ability to generate images grounded in common sense</li>
-                                <li>Designed a dataset across 6 common sense categories containing 200 pairs of image prompts, following up with an automatic evaluation process to use CLIP to compute cosine similarity between generated images and ground truth</li>
-                                <li>Constructed an automatic data pipeline from few-shot prompting GPT-4 to generate 200+ prompts per batch, to serializing and transferring prompts to remote GPU pools as model inputs, to generating and evaluating 4 variations of each prompt in parallel</li>
-                                <li>Innovated 2 automatic scoring metrics on 4 SOTA models that only diverges from human evaluations by 3%, revealing major shortcomings in new Dall-E and Stable Diffusion models including the lack of basic physical and spatial common sense</li>
+                                <li>Made key contributions to training vision language models to solve real-world GUI agent tasks such as in-app searching and web browsing, obtaining a 90%+ accuracy on 5+ metrics including question answering and button clicking on 40+ apps</li>
+                                <li>Independently implemented supervised finetuning on three 2B, 4B, and 7B in-house InternVL2 models with 5 million data samples on GUI agent tasks over 10+ rounds, improving general-purpose vision metrics including grounding accuracy by 80%</li>
+                                <li>Took full ownership to optimize the distributed training pipeline on 8-32 A100 / H100s, employing key techniques such as deepspeed weight sharding, flash attention, loss scaling, and mixed precision to improve speed by 100%+ over V100 baselines</li>
+                                <li>Creatively implemented a synthetic data pipeline to create 10k high-quality screen navigation data samples, leveraging Android SDK to perform depth-first search and using graph algorithm to synthesize optimal long-horizon plans of 5-8 steps</li>
+                                <li>Innovated another synthetic data pipeline to create 6k home screen data samples with ground truth coordinates, using graphing tools such as OpenCV to generate parametric layouts with 5+ layers that resemble real-world Android systems</li>
+                                <li>Assumed full responsibility in maintaining the compatibility of 3 vision language models across 3 independent GPU clusters</li>
                             </ul>
                         </div>
                     </div>
                 </section>
                 <section class="container mt-3">
                     <div class="row">
-                        <h3 class="text-dark mb-3">Projects</h3>
+                        <h3 class="text-dark mb-3">Research</h3>
                         <hr />
                         <div>
-                            <div class="d-flex align-items-center">
-                                <h5 class="text-dark mt-2 pe-3">Mindscape</h5>
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://mindscape-philos.com">Use App</a></button>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <h5 class="text-dark mt-2 pe-3">A Benchmark for Long-context Multi-hop Deductive Reasoning Abilities in LLMs</h5>
+                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://arxiv.org/abs/2505.15712">Read the paper</a></button>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <p class="text-secondary mt-3">(Submitted to) EMNLP 2025</p>
+                                </div>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Deployed a philosophy chatbot platform with Next.js and Vercel, enabling users to create and chat with AI philosophers by storing the models in a SQL-based Prisma database and routing users’ queries to GPT-4’s API and a vector database</li>
-                                <li>Created an ample external knowledge database by recursively scraped 500+ web pages from Stanford Encyclopedia of Philosophy with requests and BeautifulSoup, splitting the texts into 46000+ chunks of data and upserting them to a Pinecone vector database</li>
-                                <li>Improved the accuracy of chatbots’ responses using similarity search to return the top 3 text chunks most relevant to the query within 0-1 second and embedding them in GPT prompts, surpassing native GPT’s user satisfaction rate as reported by 10+ users</li>
-                                <li>Enabled chatbots to have long-term memories about user conversations by storing all chat messages into Redis and retrieving the 30+ most recent messages in realtime, preventing chatbots’ from memory loss due to recurrent API calls</li>
+                                <li>Led 6 researchers to build a comprehensive reasoning benchmark with 300+ entries, an average of 200+ possible answers, and an average of 25k+ context tokens per case to LLMs’ ability to play 10 detective games using deductive skills</li>
+                                <li>Creatively annotated tasks into 7 reasoning types, 7 answer space sizes, and 6 reasoning steps to provide a thorough evaluation of LLMs’ performances, showing reasoning steps are more correlated than answer space sizes to performance</li>
+                                <li>Orchestrated the evaluations of 12 frontier LLMs of varying sizes from 8B to 671B on 4 prompt configurations, providing 8+ surprising insights such as the inverse relationship between numbers of reasoning tokens and reasoning accuracies, the opposite effect of large context on large and small models, and the ineffectiveness of CoT on deductive tasks.</li>
                             </ul>
                         </div>
                         <div>
-                            <div class="d-flex align-items-center">
-                                <h5 class="text-dark mt-3 pe-3">Tiny Transformer</h5>
-                                <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://github.com/RiddleHe/TinyTransformer">View repo</a></button>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <h5 class="text-dark mt-2 pe-3">A Benchmark for Commonsense Reasoning Abilities in Text-to-image Diffusion Models</h5>
+                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://arxiv.org/abs/2406.07546">Read the paper</a></button>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <p class="text-secondary mt-3">(Accepted by) COLM 2024</p>
+                                </div>
                             </div>
                             <ul class="d-grid gap-3 mt-3">
-                                <li>Created a decoder-only transformer with 16 million tokens capable of generating text in any given author’s writing style</li>
-                                <li>Preprocessed the complete corpus of Shakespeare with 1.2 million text tokens, chunking the text into sequences of 32-character tokens and transforming them into embeddings of size 256 to serve as input to the transformer model</li>
-                                <li>Manually implemented 6 decoder blocks of multi-head attention layers and feed-forward layers to enable the model to understand semantic relations between tokens, adding residual connections and pre-layer normalization to prevent vanishing gradient</li>
-                                <li>Successfully achieved a cross-entropy loss of 0.9 on the training set and 1.5 on the validation set after 4k iterations of mini-batch gradient descent using the Adam optimizer, approaching the authentic writing styles of the target author</li>
+                                <li>Coordinated 5 researchers to compile the first benchmark to test diffusion models’ common sense abilities during image generation, spearheading the creation of a dataset across 5 common sense categories, 300 prompts, and 1.2k example images</li>
+                                <li>Singly developed an automated evaluation pipeline to use 2 vision language models (CLIP, GPT-4V) to compute similarity scores between generated images and ground truth text, converging with human evaluations on 95% of all 150 tasks</li>
+                                <li>Led the discovery of 5+ novel findings regarding 4 SOTA model pipelines (Stable Diffusion XL, DALLE-3, etc.) including the inability to generate atypical physical conditions and to distinguish between several uses of a word in different contexts</li>
                             </ul>
                         </div>
                     </div>
