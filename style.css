@@ -1,9 +1,10 @@
 :root {
-  --ink: #141413;
-  --clay: #cc785c;
-  --ivory: #faf9f5;
-  --muted: #6e6a5f;
-  --hair: #e3ddd1;
+  /* Nous-inspired palette: off-white + deep blue */
+  --ink: #18243f;
+  --clay: #2b569e;
+  --ivory: #f7f6f1;
+  --muted: #5b6982;
+  --hair: #dbdfe9;
   --card: #ffffff;
   --sans: "IBM Plex Sans", ui-sans-serif, -apple-system, sans-serif;
   --serif: "IBM Plex Serif", Georgia, serif;
@@ -90,7 +91,7 @@ body {
   min-width: 0;
   font-size: 1rem;
   line-height: 1.6;
-  color: #2f2e2a;
+  color: #2c3550;
 }
 .portrait {
   flex-shrink: 0;
@@ -149,7 +150,7 @@ body {
 /* Paper thumbnail */
 .thumb {
   aspect-ratio: 16 / 9;
-  background: #f4f2ee;
+  background: #eef0f5;
   border: 1px solid var(--hair);
   border-radius: 8px;
   overflow: hidden;
@@ -186,7 +187,7 @@ body {
   padding-left: 0.95em;
   font-size: 0.92rem;
   line-height: 1.42;
-  color: #44423d;
+  color: #39435c;
   margin-bottom: 0.3rem;
 }
 .bullets li:last-child { margin-bottom: 0; }
@@ -204,7 +205,7 @@ body {
   border-top: 1px solid var(--hair);
   font-family: var(--sans);
   font-size: 0.78rem;
-  color: #b8b3a7;
+  color: #aeb4c2;
 }
 
 /* ---- Responsive ---- */
