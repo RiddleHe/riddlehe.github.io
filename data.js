@@ -2,12 +2,12 @@
 
 const REPOS = [
   {
-    name: "gpt-oss-alignment",
+    name: "nanochat",
     owner: "RiddleHe",
-    desc: "A collection of interpretability techniques to control and align GPT-OSS.",
-    stars: 125,
-    lang: "Jupyter Notebook",
-    url: "https://github.com/RiddleHe/gpt-oss-alignment",
+    desc: "The best ChatGPT that $100 can buy.",
+    stars: 52,
+    lang: "Python",
+    url: "https://github.com/RiddleHe/nanochat",
   },
   {
     name: "spider",
@@ -26,12 +26,12 @@ const REPOS = [
     url: "https://github.com/RiddleHe/llm-interp",
   },
   {
-    name: "nanochat",
+    name: "gpt-oss-alignment",
     owner: "RiddleHe",
-    desc: "The best ChatGPT that $100 can buy.",
-    stars: 52,
+    desc: "A collection of interpretability techniques to control and align GPT-OSS.",
+    stars: 125,
     lang: "Python",
-    url: "https://github.com/RiddleHe/nanochat",
+    url: "https://github.com/RiddleHe/gpt-oss-alignment",
   },
 ];
 
@@ -41,7 +41,7 @@ const PAPERS = [
     venue: "EMNLP 2026",
     status: "Under review",
     thumb: "assets/papers/valuebank.png",
-    url: "https://openreview.net/forum?id=YoQ0VK3JnP",
+    url: "https://github.com/RiddleHe/nanochat/blob/master/papers/bank_of_values.pdf",
   },
   {
     title: "Impatient Users Confuse AI Agents: High-fidelity Simulations of Human Traits for Testing Agents",
