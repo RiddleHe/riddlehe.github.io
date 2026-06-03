@@ -53,7 +53,7 @@ const PAPERS = [
     url: "https://github.com/RiddleHe/nanochat/blob/master/papers/bank_of_values.pdf",
     bullets: [
       "Deep layers benefit from context-free value vectors that preserve original token information",
-      "“Bank of Values” learns a value table for the last third of layers — no V cache, beats standard attention",
+      "“Bank of Values” learns a value table for the last third of layers, with no V cache, beating standard attention",
     ],
   },
   {
