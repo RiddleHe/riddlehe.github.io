@@ -1,175 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta name="author" content="Muyu He">
-    <meta name="description" content="GitHub portfolio page for Muyu He">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta charset="utf-8">
-
-    <meta property="og:title" content="Muyu He's GitHub Portfolio">
-    <meta property="og:description" content="GitHub portfolio page that displays Muyu He's programming projects and background">
-    <meta property="og:url" content="https://riddlehe.github.io">
-
-    <title>Muyu He's GitHub Portfolio</title>
-    <link rel="icon" type="image/x-icon" href="static/boy.png">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-    <!-- Icon CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"></head>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Muyu He</title>
+  <meta name="description" content="Muyu He — research and open-source work on LLM interpretability, post-training, and reasoning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
-   
-    <a name="top"></a>
-
-    <header class="blog-header pt-5 pb-3 px-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
-            <div class="col-3 offset-1 pt-1">
-                <a target="_blank" class="btn btn-sm btn-outline-dark me-3 mb-2" href="https://github.com/RiddleHe">GitHub</a>
-                <a target="_blank" class="btn btn-sm btn-outline-dark mb-2" href="https://www.linkedin.com/in/muyu-he/">LinkedIn</a>
-            </div>
-            <div class="col-4 text-center">
-                <a target="_blank" class="blog-header-logo text-muted text-decoration-none" href="https://github.com/RiddleHe"><h4>Muyu He</h4></a>
-            </div>
-            <div class="col-4"></div>
-        </div>
+  <main class="page">
+    <header class="masthead">
+      <a class="wordmark" href="https://github.com/RiddleHe">MUYU&nbsp;HE</a>
+      <nav class="nav">
+        <a href="https://github.com/RiddleHe">GitHub</a>
+        <a href="https://x.com/HeMuyu0327">X</a>
+        <a href="mailto:muyuhe0327@gmail.com">Email</a>
+      </nav>
     </header>
 
-    <hr />
-
-    <main class="container">
-        <div class="row">
-            <div class="col-md-auto col-lg-3">
-                <div class="card border-0">
-                    <!-- if does not set width, width will be 100% -->
-                        <img src="static/Profile.JPG" class="card-img-top rounded-circle mx-auto pt-3 py-2" alt="Muyu He's profile photo" style="width:200px;">
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-dark py-2">Muyu He</h5>
-                        </div>
-                        <ul class="list-group list-group-flush px-4 text-start ms-2">
-                            <li class="list-group-item text-muted">Graduated from Penn Engineering. Machine learning engineer.</li>
-                            <li class="list-group-item text-muted">Philadelphia, Pennsylvania</li>
-                            <li class="list-group-item">
-                                <i class="bi bi-envelope me-2"></i> 
-                                <a target="_blank" href="mailto:muyuhe0327@gmail.com" class="text-decoration-none text-muted">Email</a>
-                            </li>
-<!--                            <li class="list-group-item">-->
-<!--                                <i class="bi bi-newspaper me-2"></i> -->
-<!--                                <a target="_blank" href="https://drive.google.com/file/d/1fMX3VJhHmlXwYB2Ni2RIz9uq7LwRkjV2/view?usp=sharing" class="text-decoration-none text-muted">Resume</a>-->
-<!--                            </li>-->
-                        </ul>
-                </div>
-            </div>
-            <div class="col-md-auto col-lg-9 p-3">
-                <section class="container mt-3">
-                    <div class="row text-start">
-                        <h3 class="text-dark">About Me</h3>
-                        <p class="mt-3 ps-3">I’m a CS graduate at the University of Pennsylvania's School of Engineering and a researcher in PennNLP, Penn Medicine, and Drexel University.</p>
-                        <p class="mt-3 ps-3">I am interested in the long-horizon reasoning abilities of multi-modal models (LLMs or diffusion), manifested in deductive reasoning, commonsense, formalizing natural languages, etc.. My research focuses on developing frameworks / benchmarks to improve those abilities, which are then applied to downstream tasks such as embodied AI and realistic image generation.</p>
-                        <p class="mt-3 ps-3">Before studying at Penn, I was a philosophy Summa Cum Laude graduate at the University of California, Los Angeles, ranked as the school's top 3 philosophy undergraduate in 2022.</p>
-                        <p class="mt-3 ps-3">In my free time, I'm behind two content creators on China's biggest social media, RedNote, as a philosophy educator (25k followers) and a music producer (15k).</p>
-                    </div>
-                </section>
-                <section class="container mt-3">
-                    <div class="row">
-                        <h3 class="text-dark mb-3">Work Experience</h3>
-                        <hr />
-                        <div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="text-dark mt-2 pe-3">SenseTime</h5>
-                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://www.sensetime.com/en">Website</a></button>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <p class="text-secondary mt-3">Apr 2024 - July 2024</p>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <h6 class="text-secondary mt-1">Machine Learning Engineer Intern | Research on the VLM-based GUI agent</h6>
-                            </div>
-                            <ul class="d-grid gap-3 mt-2">
-                                <li>Made key contributions to training vision language models to solve real-world GUI agent tasks such as in-app searching and web browsing, obtaining a 90%+ accuracy on 5+ metrics including question answering and button clicking on 40+ apps</li>
-                                <li>Independently implemented supervised finetuning on three 2B, 4B, and 7B in-house InternVL2 models with 5 million data samples on GUI agent tasks over 10+ rounds, improving general-purpose vision metrics including grounding accuracy by 80%</li>
-                                <li>Took full ownership to optimize the distributed training pipeline on 8-32 A100 / H100s, employing key techniques such as deepspeed weight sharding, flash attention, loss scaling, and mixed precision to improve speed by 100%+ over V100 baselines</li>
-                                <li>Creatively implemented a synthetic data pipeline to create 10k high-quality screen navigation data samples, leveraging Android SDK to perform depth-first search and using graph algorithm to synthesize optimal long-horizon plans of 5-8 steps</li>
-                                <li>Innovated another synthetic data pipeline to create 6k home screen data samples with ground truth coordinates, using graphing tools such as OpenCV to generate parametric layouts with 5+ layers that resemble real-world Android systems</li>
-                                <li>Assumed full responsibility in maintaining the compatibility of 3 vision language models across 3 independent GPU clusters</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-                <section class="container mt-3">
-                    <div class="row">
-                        <h3 class="text-dark mb-3">Research</h3>
-                        <hr />
-                        <div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="text-dark mt-2 pe-3">LLM Deductive Benchmark</h5>
-                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://arxiv.org/abs/2505.15712">Paper</a></button>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <p class="text-secondary mt-3"></p>
-                                </div>
-                            </div>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li>Led 6 researchers to build a comprehensive reasoning benchmark with 300+ entries, an average of 200+ possible answers, and an average of 25k+ context tokens per case to LLMs’ ability to play 10 detective games using deductive skills</li>
-                                <li>Creatively annotated tasks into 7 reasoning types, 7 answer space sizes, and 6 reasoning steps to provide a thorough evaluation of LLMs’ performances, showing reasoning steps are more correlated than answer space sizes to performance</li>
-                                <li>Orchestrated the evaluations of 12 frontier LLMs of varying sizes from 8B to 671B on 4 prompt configurations, providing 8+ surprising insights such as the inverse relationship between numbers of reasoning tokens and reasoning accuracies, the opposite effect of large context on large and small models, and the ineffectiveness of CoT on deductive tasks.</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center">
-                                    <h5 class="text-dark mt-2 pe-3">Diffusion Commonsense Benchmark</h5>
-                                    <button class="btn btn-sm btn-outline-dark mt-2"><a target="_blank" class="text-decoration-none text-muted" href="https://arxiv.org/abs/2406.07546">Paper</a></button>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <p class="text-secondary mt-3">COLM 2024</p>
-                                </div>
-                            </div>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li>Coordinated 5 researchers to compile the first benchmark to test diffusion models’ common sense abilities during image generation, spearheading the creation of a dataset across 5 common sense categories, 300 prompts, and 1.2k example images</li>
-                                <li>Singly developed an automated evaluation pipeline to use 2 vision language models (CLIP, GPT-4V) to compute similarity scores between generated images and ground truth text, converging with human evaluations on 95% of all 150 tasks</li>
-                                <li>Led the discovery of 5+ novel findings regarding 4 SOTA model pipelines (Stable Diffusion XL, DALLE-3, etc.) including the inability to generate atypical physical conditions and to distinguish between several uses of a word in different contexts</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-                <section class="container mt-3">
-                    <div class="row">
-                        <h3 class="text-dark">Extracurricular activities</h3>
-                        <hr />
-                        <div>
-                            <h5 class="text-dark mt-3 pe-3"><strong class="text-muted">RED</strong><small class="ms-2">Philosophy content creator</small></h5>
-                            <ul class="d-grid gap-3 mt-3">
-                                <li>Innovated popular philosophical content for the general public, acquiring 25,000 followers within 5 months and surpassing 93% of channels in growth speed</li>
-                                <li>Produced animations, articles, and cartoons every two days, acquiring over 1,000 interactions across social media per post</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-            </div>
+    <section class="row" id="repos-section">
+      <div class="row-head">
+        <h2>Open source</h2>
+        <p class="row-sub">Pinned repositories</p>
+        <div class="arrows" data-for="repos">
+          <button class="arrow" data-dir="-1" aria-label="Previous">&#8249;</button>
+          <button class="arrow" data-dir="1" aria-label="Next">&#8250;</button>
         </div>
-    </main>
+      </div>
+      <div class="track" id="repos"></div>
+    </section>
 
-    <footer class="blog-footer bg-gradient bg-light text-muted">
-        <div class="container mt-5 py-4">
-            <div class="row">
-                <div class="col-md-6 ps-5">
-                    <a href="#top" class="text-decoration-none">Back to top</a>
-                    <h6 class="mt-3"><small>&copy; 2024 Muyu He</small></h6>
-                </div>
-                <div class="col-md-6">
-
-                </div>
-            </div>
+    <section class="row" id="papers-section">
+      <div class="row-head">
+        <h2>Research</h2>
+        <p class="row-sub">Selected papers</p>
+        <div class="arrows" data-for="papers">
+          <button class="arrow" data-dir="-1" aria-label="Previous">&#8249;</button>
+          <button class="arrow" data-dir="1" aria-label="Next">&#8250;</button>
         </div>
+      </div>
+      <div class="track" id="papers"></div>
+    </section>
+
+    <footer class="footer">
+      <span>Muyu He &copy; 2026</span>
     </footer>
+  </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script src="data.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
-
-
