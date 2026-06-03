@@ -79,6 +79,27 @@ body {
   border-bottom: 1px solid var(--hair);
 }
 
+/* ---- README / about ---- */
+.about {
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 12px;
+  padding: 1.3rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #2f2e2a;
+}
+.about p { margin: 0 0 0.85rem; }
+.about p:last-child { margin-bottom: 0; }
+.about a { color: var(--clay); text-decoration: none; border-bottom: 1px solid var(--hair); }
+.about a:hover { border-bottom-color: var(--clay); }
+.about .loves {
+  margin: 0 0 0.85rem;
+  padding-left: 1.4rem;
+}
+.about .loves li { margin-bottom: 0.35rem; padding-left: 0.25rem; }
+.about .loves li::marker { color: var(--clay); font-family: var(--sans); font-weight: 600; }
+
 /* ---- 2x2 grid ---- */
 .grid {
   display: grid;
