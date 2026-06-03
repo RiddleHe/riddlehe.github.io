@@ -94,9 +94,11 @@ body {
 }
 .portrait {
   flex-shrink: 0;
-  width: 240px;
-  height: 240px;
-  object-fit: contain;
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--hair);
 }
 .about p { margin: 0 0 0.85rem; }
 .about p:last-child { margin-bottom: 0; }
