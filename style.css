@@ -79,15 +79,26 @@ body {
   border-bottom: 1px solid var(--hair);
 }
 
-/* ---- README / about ---- */
+/* ---- README / about (no box — sits on the background) ---- */
+.readme {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
 .about {
-  background: var(--card);
-  border: 1px solid var(--hair);
-  border-radius: 12px;
-  padding: 1.3rem 1.5rem;
+  flex: 1;
+  min-width: 0;
   font-size: 1rem;
   line-height: 1.6;
   color: #2f2e2a;
+}
+.portrait {
+  flex-shrink: 0;
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--hair);
 }
 .about p { margin: 0 0 0.85rem; }
 .about p:last-child { margin-bottom: 0; }
@@ -200,4 +211,6 @@ body {
 @media (max-width: 720px) {
   .grid { grid-template-columns: 1fr; }
   .masthead { align-items: flex-start; }
+  .readme { flex-direction: column-reverse; align-items: center; }
+  .portrait { width: 200px; height: 200px; }
 }
