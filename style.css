@@ -27,6 +27,27 @@ body {
   padding: 2.6rem clamp(1.1rem, 4vw, 2.4rem) 2rem;
 }
 
+/* ---- Top nav ---- */
+.topnav {
+  display: flex;
+  gap: 1.4rem;
+  margin-bottom: 1.4rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.topnav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+.topnav a:hover { color: var(--ink); }
+.topnav a.active { color: var(--clay); border-bottom-color: var(--clay); }
+
 /* ---- Masthead ---- */
 .masthead {
   display: flex;
@@ -197,6 +218,114 @@ body {
   left: 0;
   color: var(--clay);
 }
+
+/* ---- Blog index ---- */
+.blog-sub {
+  margin: -0.4rem 0 1.8rem;
+  color: var(--muted);
+  font-style: italic;
+  font-size: 1rem;
+}
+.post-list { display: flex; flex-direction: column; }
+.post-row {
+  display: flex;
+  gap: 1.6rem;
+  padding: 1.2rem 0;
+  border-top: 1px dashed var(--hair);
+  text-decoration: none;
+  color: inherit;
+}
+.post-list .post-row:last-child { border-bottom: 1px dashed var(--hair); }
+.post-date {
+  flex: 0 0 130px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding-top: 0.15rem;
+}
+.post-info { display: flex; flex-direction: column; gap: 0.3rem; }
+.post-title {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--clay);
+  transition: opacity 0.18s;
+}
+.post-row:hover .post-title { opacity: 0.75; }
+.post-blurb { font-size: 0.95rem; line-height: 1.5; color: #39435c; }
+
+@media (max-width: 560px) {
+  .post-row { flex-direction: column; gap: 0.3rem; }
+  .post-date { flex: none; }
+}
+
+/* ---- Blog post ---- */
+.post { max-width: 720px; margin: 0 auto; }
+.back-link {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: 1.1rem;
+}
+.back-link:hover { color: var(--clay); }
+.post-h1 {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+.post-meta {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 1.8rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--hair);
+}
+.post p {
+  font-size: 1.02rem;
+  line-height: 1.68;
+  color: #223050;
+  margin: 0 0 1.1rem;
+}
+.post h2 {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--clay);
+  margin: 2.1rem 0 0.9rem;
+}
+.post code {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.88em;
+  background: #eef0f5;
+  border: 1px solid var(--hair);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+}
+.post ol { padding-left: 1.3rem; margin: 0 0 1.1rem; }
+.post ol li { font-size: 1.02rem; line-height: 1.6; margin-bottom: 0.5rem; color: #223050; }
+.post a { color: var(--clay); }
+.post-footer-link {
+  margin-top: 2.2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--hair);
+  width: 100%;
+}
+
+/* KaTeX display blocks: let wide equations scroll instead of overflowing */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5rem 0 1rem;
+  margin: 0 0 1.1rem;
+}
+.katex-display > .katex { text-align: left; }
 
 /* ---- Footer ---- */
 .footer {

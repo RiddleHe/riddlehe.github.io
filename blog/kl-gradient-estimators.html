@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Computing the Gradient of the KL Penalty — Muyu He</title>
+  <link rel="icon" type="image/png" href="../assets/avatar.png" />
+  <link rel="apple-touch-icon" href="../assets/avatar.png" />
+  <meta name="description" content="Why the k1 and k3 KL estimators behave so differently under differentiation, and how to correctly estimate the gradient of a sequence-level KL penalty in RL training." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+</head>
+<body>
+  <main class="page">
+    <nav class="topnav">
+      <a href="../index.html">Home</a>
+      <a href="../blog.html" class="active">Blog</a>
+    </nav>
+
+    <article class="post">
+      <a class="back-link" href="../blog.html">&larr; Blog</a>
+      <h1 class="post-h1">Computing the Gradient of the KL Penalty</h1>
+      <p class="post-meta">June 4, 2026 &middot; Muyu He</p>
+
+      <p>RL post-training methods like GRPO and PPO often add a KL penalty against a
+        reference policy to keep the trained policy from drifting too far. The penalty
+        is usually estimated with one of Schulman's <code>k1</code> or <code>k3</code>
+        estimators, but differentiating those estimators directly turns out to be
+        subtler than it looks. These are my notes working through why, and through what
+        the correct gradient of a <em>sequence-level</em> KL penalty actually is.</p>
+
+      <h2>The k1 gradient does not depend on the reference policy</h2>
+      <p>Say the loss term is the naive Monte Carlo average of \(\log(p(x)/q(x))\),
+        \(x \sim p\) &mdash; the <code>k1</code> estimator of the reverse KL
+        \(\mathbb{E}_{x \sim p}[\log(p(x)/q(x))]\). Differentiating it directly gives:</p>
+      $$
+      \nabla_{\theta} \log \frac{p}{q}
+      \\ = \nabla_{\theta} \log p - \nabla_{\theta} \log q
+      \\ = \nabla_{\theta} \log p - 0
+      \\ = \nabla_{\theta} \log p
+      $$
+      <p>The gradient does not depend on \(\log q(x)\) at all, so the KL penalty fails
+        to pull \(p\) toward \(q\). As a result, the k1 estimator cannot be used as a
+        direct loss term &mdash; only as an extra term folded into the GRPO/PPO
+        advantage.</p>
+
+      <h2>The k1 gradient estimates a zero-valued expectation</h2>
+      <p>Worse, the expectation of \(\nabla_{\theta} \log p\) is:</p>
+      $$
+      \mathbb{E}_{x \sim p}[\nabla_{\theta} \log p]
+      \\ = \sum_{x} p \cdot \nabla_{\theta} \log p
+      \\ = \sum_{x} p \cdot \frac{1}{p} \nabla_{\theta} p
+      \\ = \sum_{x} \nabla_{\theta} p
+      \\ = \nabla_{\theta} \sum_{x} p
+      \\ = \nabla_{\theta} 1
+      \\ = 0
+      $$
+      <p>So the gradient carries no real signal &mdash; it just boosts the logprob of
+        whichever token was sampled, weighted by the current probability distribution.
+        The update can still nudge the distribution around, but there is no external
+        signal telling it which way to go.</p>
+
+      <h2>The k3 gradient depends on the inverse policy ratio</h2>
+      <p>The <code>k3</code> estimator, \(q/p - 1 + \log(p/q)\), is often preferred
+        because its value is always non-negative. Its gradient is:</p>
+      $$
+      \nabla_{\theta} \left(\frac{q}{p} - 1 + \log \frac{p}{q}\right)
+      \\ = \left(\nabla_{\theta} \frac{q}{p}\right) + \nabla_{\theta} \log \frac{p}{q}
+      \\ = \left(-q \cdot \frac{1}{p^2} \nabla_{\theta} p\right) + \nabla_{\theta} \log \frac{p}{q}
+      \\ = \left(-q \cdot \frac{1}{p^2} \cdot p \, \nabla_{\theta} \log p\right) + \nabla_{\theta} \log \frac{p}{q}
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \nabla_{\theta} \log \frac{p}{q}
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \nabla_{\theta} (\log p - \log q)
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \nabla_{\theta} \log p
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \frac{1}{p} \nabla_{\theta} p
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \frac{1}{p} \cdot p \, \nabla_{\theta} \log p
+      \\ = -\frac{q}{p} \nabla_{\theta} \log p + \nabla_{\theta} \log p
+      \\ = \left(1 - \frac{q}{p}\right) \nabla_{\theta} \log p
+      $$
+      <p>So the coefficient of the gradient, \(1 - q/p\), depends on the inverse ratio
+        \(q/p\).</p>
+
+      <h2>The k3 gradient estimates the forward KL, not the reverse KL</h2>
+      <p>Taking the expectation of that gradient &mdash; i.e.\ the value it is a
+        Monte-Carlo estimator of &mdash; gives:</p>
+      $$
+      \mathbb{E}_{x \sim p}\left[\left(1 - \frac{q}{p}\right) \nabla_{\theta} \log p\right]
+      \\ = \mathbb{E}_{x \sim p}[\nabla_{\theta} \log p] - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = \left(\sum_{x} p \cdot \frac{1}{p} \nabla_{\theta} p\right) - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = \left(\sum_{x} \nabla_{\theta} p\right) - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = \nabla_{\theta} \sum_{x} p - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = \nabla_{\theta} 1 - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = 0 - \mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = -\mathbb{E}_{x \sim p}\left[\frac{q}{p} \nabla_{\theta} \log p\right]
+      \\ = -\mathbb{E}_{x \sim q}[\nabla_{\theta} \log p]
+      $$
+      <p>But \(-\mathbb{E}_{x \sim q}[\nabla_{\theta} \log p]\) is exactly what the
+        forward KL wants to optimize:</p>
+      $$
+      \nabla_{\theta} D_{\text{KL}}(q \Vert p)
+      \\ = \nabla_{\theta} \sum_{x} q \cdot (\log q - \log p)
+      \\ = \nabla_{\theta} \sum_{x} q \cdot \log q - \nabla_{\theta} \sum_{x} q \cdot \log p
+      \\ = 0 - \nabla_{\theta} \sum_{x} q \cdot \log p
+      \\ = -\sum_{x} q \, \nabla_{\theta} \log p
+      \\ = -\mathbb{E}_{x \sim q}[\nabla_{\theta} \log p]
+      $$
+      <p>So even though the <em>value</em> of the k3 estimator is an unbiased estimator
+        of the reverse KL, its <em>gradient</em> is not an unbiased estimator of the
+        reverse-KL gradient &mdash; it is an unbiased estimator of the forward-KL
+        gradient instead.</p>
+
+      <h2>Sequence-level KL is not the sum of token-level KL gradients</h2>
+      <p>The value of a sequence \(y_{1:T}\)'s KL does equal the sum of its tokens'
+        KLs:</p>
+      $$
+      D_{\text{KL}}(p(y_{1:T}) \Vert q(y_{1:T}))
+      = \mathbb{E}_{y_{1:T} \sim p}\left[\log \frac{p(y_{1:T})}{q(y_{1:T})}\right]
+      = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=0}^{T} \log \frac{p(y_t \mid x, y_{1:t-1})}{q(y_t \mid x, y_{1:t-1})}\right]
+      $$
+      <p>Training frameworks such as VeRL implement the sequence KL as the right-hand
+        side above, which is correct &mdash; but then differentiate each token-level
+        log-ratio independently, which is not, because the implicit \(p(y_{1:T})\)
+        inside the expectation requires the product rule:</p>
+      $$
+      \nabla_{\theta} \ \mathbb{E}_{y_{1:T} \sim p}\left[\log \frac{p(y_{1:T})}{q(y_{1:T})}\right]
+      \neq
+      \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=0}^{T} \nabla_{\theta} \log \frac{p(y_t \mid x, y_{1:t-1})}{q(y_t \mid x, y_{1:t-1})}\right]
+      $$
+
+      <h2>The correct token-KL estimator</h2>
+      <p>Working the product rule through properly, the correct token-KL gradient
+        is:</p>
+      $$
+      \nabla_{\theta} \ \mathbb{E}_{x \sim p}\left[\log \frac{p(x)}{q(x)}\right]
+      \\ = \nabla_{\theta} \sum_{x} p(x) \log \frac{p(x)}{q(x)}
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \sum_{x} p(x) \left(\nabla_{\theta} \log \frac{p(x)}{q(x)}\right)
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \sum_{x} p(x) (\nabla_{\theta} \log p(x))
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \sum_{x} p(x) \frac{1}{p(x)} \nabla_{\theta} p(x)
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \sum_{x} \nabla_{\theta} p(x)
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \nabla_{\theta} \sum_{x} p(x)
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + \nabla_{\theta} 1
+      \\ = \sum_{x} (\nabla_{\theta} p(x)) \log \frac{p(x)}{q(x)} + 0
+      \\ = \sum_{x} \left(p(x) \nabla_{\theta} \log p(x)\right) \log \frac{p(x)}{q(x)}
+      \\ = \mathbb{E}_{x \sim p}\left[\log \frac{p(x)}{q(x)} \, \nabla_{\theta} \log p(x)\right]
+      $$
+      <p>So the correct estimator is simply \(\log(p(x)/q(x)) \, \nabla_{\theta} \log
+        p(x)\), which checks out as a policy-gradient loss with \(\log(p(x)/q(x))\)
+        playing the role of the advantage.</p>
+
+      <h2>The correct sequence-KL estimator</h2>
+      <p>The same product-rule argument at the sequence level gives:</p>
+      $$
+      \nabla_{\theta} \ \mathbb{E}_{y_{1:T} \sim p}\left[\log \frac{p(y_{1:T})}{q(y_{1:T})}\right]
+      \\ = \nabla_{\theta} \sum_{y_{1:T}} p(y_{1:T}) \log \frac{p(y_{1:T})}{q(y_{1:T})}
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \, \nabla_{\theta} \left(\log \frac{p(y_{1:T})}{q(y_{1:T})}\right)
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \sum_{t=1}^{T} \nabla_{\theta} \left(\log \frac{p(y_t \mid y_{1:t-1})}{q(y_t \mid y_{1:t-1})}\right)
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \, \nabla_{\theta} \sum_{t=1}^{T} \log p(y_t \mid y_{1:t-1})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \, \nabla_{\theta} \log p(y_{1:T})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} p(y_{1:T}) \frac{1}{p(y_{1:T})} \nabla_{\theta} p(y_{1:T})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \sum_{y_{1:T}} \nabla_{\theta} p(y_{1:T})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \nabla_{\theta} \sum_{y_{1:T}} p(y_{1:T})
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + \nabla_{\theta} 1
+      \\ = \sum_{y_{1:T}} (\nabla_{\theta} p(y_{1:T})) \log \frac{p(y_{1:T})}{q(y_{1:T})} + 0
+      \\ = \sum_{y_{1:T}} p(y_{1:T}) \left(\nabla_{\theta} \log p(y_{1:T})\right) \log \frac{p(y_{1:T})}{q(y_{1:T})}
+      \\ = \mathbb{E}_{y_{1:T} \sim p}\left[\log \frac{p(y_{1:T})}{q(y_{1:T})} \left(\nabla_{\theta} \log p(y_{1:T})\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{s=1}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \left(\nabla_{\theta} \sum_{t=1}^{T} \log p(y_t \mid y_{1:t-1})\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{s=1}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \left(\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right)\right]
+      $$
+      <p>So the correct estimator still only differentiates each token's logprob
+        &mdash; it just weights and sums those logprobs the correct way, coupling
+        every token's log-ratio to every other token's gradient.</p>
+
+      <h2>Simplifying the sequence-KL estimator</h2>
+      <p>That coupling means the correct estimator is a double sum over token pairs
+        \((s, t)\). Expanding it:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{s=1}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \left(\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{s=1}^{T} \sum_{t=1}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \sum_{s=1}^{t-1} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right]
+      + \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right]
+      $$
+      <p>For a single term in either double sum:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim p}\left[\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right]
+      \\ = \sum_{y_{1:T}} p(y_{1:T}) \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \sum_{y_t} p(y_t \mid y_{1:t-1}) \sum_{y_{t+1:T}} p(y_{t+1:T} \mid y_{1:t}) \, \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      $$
+      <p>For the first term, where \(s \lt t\):</p>
+      $$
+      \sum_{y_{1:t-1}} p(y_{1:t-1}) \sum_{y_t} p(y_t \mid y_{1:t-1}) \sum_{y_{t+1:T}} p(y_{t+1:T} \mid y_{1:t}) \, \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \underbrace{\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}}_{\text{same for every } y_{t:T} \text{ if } s \lt t} \sum_{y_t} p(y_t \mid y_{1:t-1}) \sum_{y_{t+1:T}} p(y_{t+1:T} \mid y_{1:t}) \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \sum_{y_t} p(y_t \mid y_{1:t-1}) \underbrace{\nabla_{\theta} \log p(y_t \mid y_{1:t-1})}_{\text{same for every } y_{t+1:T}} \sum_{y_{t+1:T}} p(y_{t+1:T} \mid y_{1:t})
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \sum_{y_t} p(y_t \mid y_{1:t-1}) \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \cdot 1
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \, \mathbb{E}_{y_t \sim p}[\nabla_{\theta} \log p(y_t \mid y_{1:t-1})]
+      \\ = \sum_{y_{1:t-1}} p(y_{1:t-1}) \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \cdot 0
+      \\ = 0
+      $$
+      <p>The \(s \lt t\) term vanishes, using the same zero-expectation identity from
+        the k1 estimator above. We can't do the same for the \(s \geq t\) term,
+        because there's no way to pull the log-ratio out of the inner expectation to
+        get a 0-valued term. So the estimator reduces to just the \(s \geq t\)
+        half:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})} \underbrace{\nabla_{\theta} \log p(y_t \mid y_{1:t-1})}_{\text{same for every } s \geq t}\right]
+      = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \underbrace{\left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{R_t}\right]
+      $$
+
+      <h2>Implementing the sequence-KL estimator</h2>
+      <p>Given a complete sequence \(y_{1:T}\) with logprobs under both \(p\) and
+        \(q\), this comes down to two steps:</p>
+      <ol>
+        <li>Compute \(R_t\) for every token. Each position \(t\) needs
+          \(\log(p_t/q_t) + R_{t+1}\), i.e.\ a reversed cumulative sum:
+          <code>log_ratio.flip(-1).cumsum(-1).flip(-1)</code>.</li>
+        <li>Compute the loss for each token in parallel, the regular policy-gradient
+          way, using \(R_t\) in place of the usual advantage.</li>
+      </ol>
+
+      <h2>Sequence-KL estimator with importance sampling</h2>
+      <p>Using the importance-sampling ratio, the same expectation over \(p\) can be
+        rewritten as an expectation over \(q\):</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim q}\left[\frac{p(y_{1:T})}{q(y_{1:T})} \sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim q}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \underbrace{\left(\sum_{s=t}^{T} \frac{p(y_{1:T})}{q(y_{1:T})} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{\text{depends on } y_{1:s} \text{ only, since } t \leq s}\right]
+      $$
+      <p>I haven't finished simplifying this further, or worked out whether the
+        importance-sampled form is actually lower-variance in practice &mdash; I'll
+        come back and update this section once I do.</p>
+
+      <h2>The gradient of on-policy distillation</h2>
+      <p>On-policy distillation, as implemented in
+        <a href="https://thinkingmachines.ai/blog/on-policy-distillation/" target="_blank" rel="noopener">Thinking Machines' blog post</a>,
+        follows the correct token-level KL estimator above, using the teacher as the
+        reference policy. It's presented purely as a token-level estimator &mdash; it
+        doesn't claim to estimate the sequence-level KL, and, per the derivation
+        above, it wouldn't be correct if it did.</p>
+
+      <a class="back-link post-footer-link" href="../blog.html">&larr; Back to all posts</a>
+    </article>
+
+    <footer class="footer">Muyu He &copy; 2026</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false }
+      ],
+      throwOnError: false
+    });
+  </script>
+</body>
+</html>

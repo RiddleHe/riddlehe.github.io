@@ -92,6 +92,16 @@ const PAPERS = [
   },
 ];
 
+// Blog posts. Order = display order (newest first).
+const POSTS = [
+  {
+    title: "Computing the Gradient of the KL Penalty",
+    date: "2026-06-04",
+    slug: "blog/kl-gradient-estimators.html",
+    blurb: "Why the k1 and k3 KL estimators behave so differently under differentiation, and how to correctly estimate the gradient of a sequence-level KL penalty in RL training.",
+  },
+];
+
 // Profile-level header chips
 const PROFILE = {
   email: "muyuhe0327@gmail.com",
