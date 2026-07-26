@@ -23,7 +23,7 @@
     <article class="post">
       <a class="back-link" href="../blog.html">&larr; Blog</a>
       <h1 class="post-h1">Computing the Gradient of the KL Penalty</h1>
-      <p class="post-meta">June 4, 2026 &middot; Muyu He</p>
+      <p class="post-meta">June 4, 2026 (updated July 25, 2026) &middot; Muyu He</p>
 
       <p>RL post-training methods like GRPO and PPO often add a KL penalty against a
         reference policy to keep the trained policy from drifting too far. The penalty
@@ -221,15 +221,41 @@
 
       <h2>Sequence-KL estimator with importance sampling</h2>
       <p>Using the importance-sampling ratio, the same expectation over \(p\) can be
-        rewritten as an expectation over \(q\):</p>
+        rewritten as an expectation over the <em>rollout policy</em> \(\mu\) &mdash;
+        not the reference policy \(q\), which stays exactly where it is, inside the
+        log-ratio:</p>
       $$
       \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
-      \\ = \mathbb{E}_{y_{1:T} \sim q}\left[\frac{p(y_{1:T})}{q(y_{1:T})} \sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
-      \\ = \mathbb{E}_{y_{1:T} \sim q}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \underbrace{\left(\sum_{s=t}^{T} \frac{p(y_{1:T})}{q(y_{1:T})} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{\text{depends on } y_{1:s} \text{ only, since } t \leq s}\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim \mu}\left[\frac{p(y_{1:T})}{\mu(y_{1:T})} \sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
       $$
-      <p>I haven't finished simplifying this further, or worked out whether the
-        importance-sampled form is actually lower-variance in practice &mdash; I'll
-        come back and update this section once I do.</p>
+      <p>Take a single \((s, t)\) term out of that double sum, with \(s \geq t\) as
+        established above. The trick is to split the rollout \(y_{1:T}\) at position
+        \(s\): everything the term depends on &mdash; the importance weight up to
+        \(s\), the gradient at \(t \leq s\), and the log-ratio at \(s\) &mdash; is
+        fixed once \(y_{1:s}\) is fixed, so the sum over the remaining tokens
+        \(y_{s+1:T}\) integrates away to 1:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim \mu}\left[\frac{p(y_{1:T})}{\mu(y_{1:T})} \left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
+      \\ = \sum_{y_{1:s}} \sum_{y_{s+1:T}} \underbrace{\mu(y_{1:s})}_{\text{fixed by } y_{1:s}} \, \mu(y_{s+1:T} \mid y_{1:s}) \left(\underbrace{\frac{p(y_{1:s})}{\mu(y_{1:s})}}_{\text{fixed by } y_{1:s}} \frac{p(y_{s+1:T} \mid y_{1:s})}{\mu(y_{s+1:T} \mid y_{1:s})}\right) \underbrace{\left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{\text{fixed by } y_{1:s}}
+      \\ = \sum_{y_{1:s}} \mu(y_{1:s}) \frac{p(y_{1:s})}{\mu(y_{1:s})} \left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right) \sum_{y_{s+1:T}} \mu(y_{s+1:T} \mid y_{1:s}) \frac{p(y_{s+1:T} \mid y_{1:s})}{\mu(y_{s+1:T} \mid y_{1:s})}
+      \\ = \sum_{y_{1:s}} \mu(y_{1:s}) \frac{p(y_{1:s})}{\mu(y_{1:s})} \left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right) \sum_{y_{s+1:T}} p(y_{s+1:T} \mid y_{1:s})
+      \\ = \sum_{y_{1:s}} \mu(y_{1:s}) \frac{p(y_{1:s})}{\mu(y_{1:s})} \left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right) \cdot 1
+      \\ = \mathbb{E}_{y_{1:T} \sim \mu}\left[\frac{p(y_{1:s})}{\mu(y_{1:s})} \left(\nabla_{\theta} \log p(y_t \mid y_{1:t-1})\right) \left(\log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
+      $$
+      <p>So the \((s,t)\) term's importance weight collapses from a ratio over the
+        <em>full</em> sequence, \(p(y_{1:T})/\mu(y_{1:T})\), down to a ratio over just
+        the prefix, \(p(y_{1:s})/\mu(y_{1:s})\). Putting every term back into the
+        sum:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim \mu}\left[\frac{p(y_{1:T})}{\mu(y_{1:T})} \sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim \mu}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \sum_{s=t}^{T} \frac{p(y_{1:T})}{\mu(y_{1:T})} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right]
+      \\ = \mathbb{E}_{y_{1:T} \sim \mu}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \underbrace{\left(\sum_{s=t}^{T} \frac{p(y_{1:s})}{\mu(y_{1:s})} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{\widetilde{R}_t}\right]
+      $$
+      <p>The derivation hinges on each term in the outer sum over \(t\) not
+        depending on \(s\), so it can be pulled inside the inner sum over \(s\).
+        The upshot: importance sampling doesn't change the shape of the estimator at
+        all &mdash; it only replaces \(R_t\) with a version that reweights each
+        \(s\)-term by \(p(y_{1:s})/\mu(y_{1:s})\), the prefix importance ratio.</p>
 
       <h2>The gradient of on-policy distillation</h2>
       <p>On-policy distillation, as implemented in
