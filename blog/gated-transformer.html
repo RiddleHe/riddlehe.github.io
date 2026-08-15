@@ -6,7 +6,7 @@
   <title>Gated Transformer — Muyu He</title>
   <link rel="icon" type="image/png" href="../assets/avatar.png" />
   <link rel="apple-touch-icon" href="../assets/avatar.png" />
-  <meta name="description" content="Notes on gated transformers." />
+  <meta name="description" content="An ongoing chronicle of the motivation, experiments, and finding of a transformer model that is able to scale each block output by a gate value." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -23,9 +23,113 @@
     <article class="post">
       <a class="back-link" href="../blog.html">&larr; Blog</a>
       <h1 class="post-h1">Gated Transformer</h1>
-      <p class="post-meta">August 14, 2026 &middot; Muyu He</p>
+      <p class="post-meta">Started August 3, 2026 &middot; Last updated August 14, 2026 &middot; Muyu He</p>
 
-      <h2>Citation</h2>
+      <p class="post-lead">This is an ongoing chronicle of the motivation, experiments, and finding of a transformer model that is able to scale each block output by a gate value, documenting how the research has evolved (and is evolving).</p>
+
+      <div class="research-log">
+        <section class="research-entry" aria-labelledby="entry-2026-08-03">
+          <h2 class="entry-date-divider" id="entry-2026-08-03"><span>August 3, 2026</span></h2>
+
+          <p>Continuing to train this model which scales each block output with a token-dependent gate. Previously the val loss was high and gate values were concentrated on two extremes. Now I've identified them as not design but training issues. Solving them beats the baseline by a bit, pointing to some valuable followups.</p>
+
+          <p><strong>Previous issues.</strong> The gate design is \(1 + 0.5 \tanh(wx)\) with gate vector \(w\) and input \(x\), so value range is \([0.5, 1.5]\), and in bf16 the gradient for \(w\) goes to exact 0 if \(\lvert wx \rvert = 3.5\). I tried to address this by changing the gate, but it did not work. Sigmoid / Tanh / ReLU / SiLU all have a component in the gradient that can zero out the whole gradient. Also \(x\) is already RMS-normed and not a factor.</p>
+
+          <p><strong>Training solution.</strong> My solution is not super principled because i changed several things at once, but the idea is that each makes sense: (1) I added a L2 norm on \(wx\) directly so that it stays within range; (2) I massively lowered the LR from 0.35 (nanochat default, VERY high for a vector) to 0.001.</p>
+
+          <p><strong>The result.</strong> We see that the validation bpb on the 780M model trained on 8B tokens beat the standard baseline, and then gate values evaluated on 262k tokens show no extreme values. This is a good indicator of model health, and therefore gives me a good model to do some mech interp on.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2084520028599091508-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2084520028599091508-1.png" alt="Validation BPB curves comparing the baseline, the original gate, and the gate with L2 loss and a lower learning rate." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Validation BPB for the baseline, original gate, and gate with L2 loss plus a lower learning rate.</figcaption>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2084520028599091508-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2084520028599091508-2.png" alt="Gate-value distributions by layer before and after adding L2 loss and lowering the learning rate." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Gate-value distributions by layer before and after the training changes.</figcaption>
+          </figure>
+
+          <p><strong>Followups.</strong> Already we can see that the average gate values for each layer is interesting. Early layers are slightly suppressed and late layers are slightly enhanced, but there might also be position and token identity based differences. Slightly hyped to work on this fun model in the coming days.</p>
+
+          <p>Code is available at github.com/RiddleHe/nanochat. Shout out to Sol for this Slytherin-coded new aesthetic. Keep it up.</p>
+        </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-08-04">
+          <h2 class="entry-date-divider" id="entry-2026-08-04"><span>August 4, 2026</span></h2>
+
+          <p>I trained this gate model that outputs a scalar gate for each layer output in range \([0.5, 1.5]\). But i plotted the L2 norm of each layer output of this model vs baseline on 272K tokens, and it is evident that scaling by 0.5~1.5 won't do much.</p>
+
+          <p>I am now experimenting a new gate \(w\) that has unbounded positive value: \(0.1 + 0.9(z + \sqrt{1 + z^2})\) for \(z = w \cdot x\). The nice property is that while \(z\) can take on any value, the final output is strictly \([0.1, \infty)\). And the gradient of \(z\) also converges nicely on the positive side to a decent value.</p>
+
+          <p>The only problem with this is that on the negative side the gradient of \(z\) approaches 0 and for bf16 this means it IS 0 if \(\lvert z \rvert\) approaches 3. And the solution is to define a second loss \(= \max(0, -z - 3)\), to nudge \(z\) away from large negatives if it can.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2084884619623600171-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2084884619623600171-1.png" alt="Pre-gate block-update L2 norm distributions for the standard and gated 24-layer models." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Pre-gate block-update L2 norms: the standard 24-layer model versus the gated model.</figcaption>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2084884619623600171-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2084884619623600171-2.png" alt="Plots of the unbounded positive gate value and its gradient as functions of the raw gate logit z." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>The unbounded positive gate and its gradient as functions of the raw gate logit \(z\).</figcaption>
+          </figure>
+
+          <p>I hope this model can have interesting properties such as insane but sensical positive gate values for some token / prefix. In my prev paper we see that models love to scale up certain peculiar computational path (deep attention layers with token embed as input). Will love to see something similar here.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2084884619623600171-3.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2084884619623600171-3.png" alt="Learned unbounded coefficients for value-vector components across target layers in substitutive and additive variants." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Unbounded learned coefficients from the earlier value-vector experiments.</figcaption>
+          </figure>
+        </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-08-14">
+          <h2 class="entry-date-divider" id="entry-2026-08-14"><span>August 14, 2026</span></h2>
+
+          <p>I have taken a liking to this gated transformer model I am training and found several interesting mech interp results.</p>
+
+          <p><strong>The setup.</strong> I learned a scalar gate to scale each block output, which is controlled by the dot product between the input and a learned gate vector. After several iterations, the gate is positively unbounded and nicely penalizes going near 0 so that it always has a decent gradient.</p>
+
+          <p><strong>The result.</strong> The val bpb on 8B token - 780M params beats the baseline and a more bounded model of 0.5~1.5 gate values.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2088492471651279339-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2088492471651279339-1.png" alt="Validation BPB curves comparing the baseline, the previous gate with L2 loss, and the current gate with negative-tail recovery." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Validation BPB for the baseline, previous gate, and current gate with negative-tail recovery.</figcaption>
+          </figure>
+
+          <p>The interesting part is how the token-dependent gate values change the L2 norm of each block output. I observe that standard transformer's block output norm follows a roughly exponential trend so later layers blow up in norm. The gate model however outputs from each block hidden states with roughly the same norm, while the gate value follows an exponential trend. Together the gate * output norm recovers the baseline's exponential trend, with a different slope under log scale.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2088492471651279339-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2088492471651279339-2.png" alt="Per-layer gate values and pre-gate block-output L2 norms across validation tokens." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Per-layer gate values and pre-gate block-output L2 norms across validation tokens.</figcaption>
+          </figure>
+
+          <p>This result is interesting because it seems to show that gains in val bpb, which seems to be statistically sound, come from a more flexible way to scale the outputs. The two models are equally expressive, as the baseline can also change the norm of each block output depending on the input token. However, the baseline does this using the matrices' weights in a block, while a gate model only needs to use a vector per block. My understanding is that this can simplify the scaling and "offload" the weight matrices to do something else.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/gated-transformer/2088492471651279339-3.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/gated-transformer/2088492471651279339-3.png" alt="Contribution L2 norm by layer for the gated model and the baseline, with means and standard-deviation bands." loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Contribution L2 norm by layer: the gated model versus the baseline.</figcaption>
+          </figure>
+
+          <p>A lot of other intrigues in the L2 norm: we see that in the gate model, L16 is extremely high variance. This seems to be a learned property, and is very different from the low variance of other adjacent layers. Wanna take a good look at what's going on.</p>
+        </section>
+      </div>
+
+      <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026gatedtransformer,
   author = {He, Muyu},
   title  = {Gated Transformer},

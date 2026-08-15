@@ -293,6 +293,12 @@ body {
   color: #223050;
   margin: 0 0 1.1rem;
 }
+.post .post-lead {
+  font-size: 1.12rem;
+  line-height: 1.72;
+  color: var(--ink);
+  margin-bottom: 0;
+}
 .post h2 {
   font-family: var(--sans);
   font-weight: 600;
@@ -327,6 +333,58 @@ body {
 .post ol { padding-left: 1.3rem; margin: 0 0 1.1rem; }
 .post ol li { font-size: 1.02rem; line-height: 1.6; margin-bottom: 0.5rem; color: #223050; }
 .post a { color: var(--clay); }
+.research-log { margin-top: 2.6rem; }
+.research-entry { padding-bottom: 0.35rem; }
+.entry-date-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 3rem 0 0.55rem !important;
+  color: var(--muted) !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.entry-date-divider::before,
+.entry-date-divider::after {
+  content: "";
+  height: 1px;
+  background: var(--hair);
+}
+.entry-date-divider::before { width: 1.25rem; }
+.entry-date-divider::after { flex: 1; }
+.entry-date-divider span {
+  flex: none;
+  padding: 0.35rem 0.7rem;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+}
+.research-figure {
+  margin: 1.55rem 0 2rem;
+}
+.research-figure a {
+  display: block;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--hair);
+  border-radius: 10px;
+}
+.research-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.research-figure figcaption {
+  margin-top: 0.55rem;
+  padding: 0 0.1rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.citation-heading { margin-top: 3.2rem !important; }
 .post-footer-link {
   margin-top: 2.2rem;
   padding-top: 1.4rem;

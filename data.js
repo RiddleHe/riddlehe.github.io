@@ -98,7 +98,7 @@ const POSTS = [
     title: "Gated Transformer",
     date: "2026-08-14",
     slug: "blog/gated-transformer.html",
-    blurb: "",
+    blurb: "An ongoing chronicle of the motivation, experiments, and finding of a transformer model that can scale each block output by a learned gate value.",
   },
   {
     title: "Computing the Gradient of the KL Penalty",
