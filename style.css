@@ -308,6 +308,22 @@ body {
   border-radius: 4px;
   padding: 0.1em 0.4em;
 }
+.post pre {
+  overflow-x: auto;
+  margin: 0 0 1.1rem;
+  padding: 1rem 1.1rem;
+  background: #eef0f5;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+}
+.post pre code {
+  display: block;
+  min-width: max-content;
+  padding: 0;
+  background: none;
+  border: 0;
+  line-height: 1.6;
+}
 .post ol { padding-left: 1.3rem; margin: 0 0 1.1rem; }
 .post ol li { font-size: 1.02rem; line-height: 1.6; margin-bottom: 0.5rem; color: #223050; }
 .post a { color: var(--clay); }
