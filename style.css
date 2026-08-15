@@ -293,12 +293,6 @@ body {
   color: #223050;
   margin: 0 0 1.1rem;
 }
-.post .post-lead {
-  font-size: 1.12rem;
-  line-height: 1.72;
-  color: var(--ink);
-  margin-bottom: 0;
-}
 .post h2 {
   font-family: var(--sans);
   font-weight: 600;
