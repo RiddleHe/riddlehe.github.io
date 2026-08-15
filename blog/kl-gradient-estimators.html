@@ -208,6 +208,25 @@
       = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \underbrace{\left(\sum_{s=t}^{T} \log \frac{p(y_s \mid y_{1:s-1})}{q(y_s \mid y_{1:s-1})}\right)}_{R_t}\right]
       $$
 
+      <h2>Reducing variance with a prefix baseline</h2>
+      <p>We can subtract a baseline \(b_{1:t-1}\) from \(R_t\) as long as the
+        baseline depends only on the prefix before token \(t\). Conditioned on that
+        prefix, the baseline is constant, and the score function still has zero
+        expectation:</p>
+      $$
+      \mathbb{E}_{y_t \sim p(\cdot \mid y_{1:t-1})}\left[\nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \, b_{1:t-1}\right]
+      \\ = b_{1:t-1} \sum_{y_t} p(y_t \mid y_{1:t-1}) \, \nabla_{\theta} \log p(y_t \mid y_{1:t-1})
+      \\ = b_{1:t-1} \, \nabla_{\theta} \sum_{y_t} p(y_t \mid y_{1:t-1})
+      \\ = 0.
+      $$
+      <p>Therefore the baseline leaves the expected sequence-KL gradient unchanged:</p>
+      $$
+      \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) \left(R_t - b_{1:t-1}\right)\right]
+      = \mathbb{E}_{y_{1:T} \sim p}\left[\sum_{t=1}^{T} \nabla_{\theta} \log p(y_t \mid y_{1:t-1}) R_t\right].
+      $$
+      <p>This gives us freedom to choose a prefix-dependent baseline that reduces
+        the estimator's variance without introducing bias.</p>
+
       <h2>Implementing the sequence-KL estimator</h2>
       <p>Given a complete sequence \(y_{1:T}\) with logprobs under both \(p\) and
         \(q\), this comes down to two steps:</p>
@@ -256,6 +275,21 @@
         The upshot: importance sampling doesn't change the shape of the estimator at
         all &mdash; it only replaces \(R_t\) with a version that reweights each
         \(s\)-term by \(p(y_{1:s})/\mu(y_{1:s})\), the prefix importance ratio.</p>
+
+      <h2>Implementing the importance-sampled estimator</h2>
+      <p>Computing \(\widetilde{R}_t\) remains linear in sequence length. It takes
+        three parallel prefix or suffix operations:</p>
+      <ol>
+        <li>Compute the importance weight for every prefix by cumulatively summing
+          the token log-ratios \(\log(p/\mu)\), then exponentiating:
+          <code>prefix_weight = log_is_ratio.cumsum(dim=-1).exp()</code>.</li>
+        <li>Weight each token's \(\log(p/q)\) by its corresponding prefix weight:
+          <code>weighted_log_ratio = prefix_weight * log_ratio</code>.</li>
+        <li>Reverse-cumulatively sum those weighted log-ratios:
+          <code>r_tilde = weighted_log_ratio.flip(-1).cumsum(-1).flip(-1)</code>.</li>
+      </ol>
+      <p>Each operation is \(O(T)\), so the complete importance-sampled estimator
+        is still \(O(T)\).</p>
 
       <h2>The gradient of on-policy distillation</h2>
       <p>On-policy distillation, as implemented in
