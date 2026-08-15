@@ -4,7 +4,7 @@ const REPOS = [
   {
     name: "nanochat",
     owner: "RiddleHe",
-    stars: 52,
+    stars: 58,
     url: "https://github.com/RiddleHe/nanochat",
     bullets: [
       "Hackable pretraining stack from karpathy/nanochat with easy architecture definition and FLOP-controlled ablations",
@@ -14,7 +14,7 @@ const REPOS = [
   {
     name: "spider",
     owner: "collinear-ai",
-    stars: 105,
+    stars: 109,
     url: "https://github.com/collinear-ai/spider",
     bullets: [
       "Cross-tokenizer alignment for on-policy distillation across any teacher–student pair",
@@ -113,7 +113,7 @@ const PROFILE = {
   email: "muyuhe0327@gmail.com",
   x: "https://x.com/HeMuyu0327",
   github: "https://github.com/RiddleHe",
-  githubStars: 373,
+  githubStars: 383,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
   citations: 60,
   resume: "resume.pdf",
