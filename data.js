@@ -95,6 +95,12 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
+    title: "Gated Transformer",
+    date: "2026-08-14",
+    slug: "blog/gated-transformer.html",
+    blurb: "",
+  },
+  {
     title: "Computing the Gradient of the KL Penalty",
     date: "2026-06-04",
     slug: "blog/kl-gradient-estimators.html",
