@@ -60,7 +60,7 @@ const PAPERS = [
     title: "High-fidelity Simulations of Human Traits for Testing Agents",
     venue: "ACL 2026",
     status: "Oral",
-    cited: 8,
+    cited: 9,
     thumb: "assets/papers/impatient.png",
     url: "https://arxiv.org/abs/2510.04491",
     bullets: [
@@ -72,7 +72,7 @@ const PAPERS = [
     title: "Evaluating Deductive Reasoning via Detective Games",
     venue: "EMNLP 2025",
     status: "",
-    cited: 5,
+    cited: 8,
     thumb: "assets/papers/turnabout.png",
     url: "https://arxiv.org/abs/2505.15712",
     bullets: [
@@ -83,7 +83,7 @@ const PAPERS = [
     title: "Commonsense-T2I: Can Text-to-Image Models Understand Commonsense?",
     venue: "COLM 2024",
     status: "",
-    cited: 45,
+    cited: 51,
     thumb: "assets/papers/commonsense.png",
     url: "https://arxiv.org/abs/2406.07546",
     bullets: [
@@ -121,6 +121,6 @@ const PROFILE = {
   github: "https://github.com/RiddleHe",
   githubStars: 383,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
-  citations: 60,
+  citations: 76,
   resume: "resume.pdf",
 };
