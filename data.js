@@ -47,7 +47,7 @@ const PAPERS = [
   {
     title: "Do Value Vectors in Deep Layers Need Context from the Residual Stream?",
     venue: "EMNLP 2026",
-    status: "Under review",
+    status: "",
     cited: 0,
     thumb: "assets/papers/valuebank.png",
     url: "https://github.com/RiddleHe/nanochat/blob/master/papers/bank_of_values.pdf",
