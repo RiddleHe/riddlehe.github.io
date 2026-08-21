@@ -80,14 +80,16 @@
       <h2>K3 estimator is non-negative</h2>
       <p>We can prove that k3 is nonnegative by first finding its global minimum given \(\delta\):</p>
       $$
+      \begin{gathered}
       \begin{aligned}
       \text{Let } f(\delta) &= \log (1+\delta) + (\frac{1}{1+\delta}) - 1 \\
       \therefore f'(\delta) &= \frac{1}{1+\delta} - \frac{1}{(1+\delta)^2} \\
-      &= \frac{\delta}{(1+\delta)^2} \\
-      \because f'(\delta) &= \frac{\delta}{(1+\delta)^2} = \begin{cases} \lt 0 & -1 \lt \delta \lt 0 \\ 0 & \delta = 0 \\ \gt 0 & \delta \gt 0 \end{cases} \\
+      &= \frac{\delta}{(1+\delta)^2}
+      \end{aligned} \\[0.8em]
+      \because f'(\delta) = \frac{\delta}{(1+\delta)^2} = \begin{cases} \lt 0 & -1 \lt \delta \lt 0 \\ 0 & \delta = 0 \\ \gt 0 & \delta \gt 0 \end{cases} \\[0.8em]
       \therefore \delta \text{ is the global minimizer} \\
       \therefore \text{min}f(\delta) = 0
-      \end{aligned}
+      \end{gathered}
       $$
 
       <h2>K3 estimator is likely to have lower variance than k1 at a token position when \(|\delta|\ll 1\), but not necessarily otherwise</h2>
