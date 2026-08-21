@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reducing the variance in KL estimator — Muyu He</title>
+  <link rel="icon" type="image/png" href="../assets/avatar.png" />
+  <link rel="apple-touch-icon" href="../assets/avatar.png" />
+  <meta name="description" content="The variance of this estimator based over sampled tokens x is high, which lead to training instability." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+</head>
+<body>
+  <main class="page">
+    <nav class="topnav">
+      <a href="../index.html">Home</a>
+      <a href="../blog.html" class="active">Blog</a>
+    </nav>
+
+    <article class="post">
+      <a class="back-link" href="../blog.html">&larr; Blog</a>
+      <h1 class="post-h1">Reducing the variance in KL estimator</h1>
+      <p class="post-meta">August 20, 2026 &middot; Muyu He</p>
+
+      <p><strong>Problem.</strong> The standard estimator (”k1”) of the KL divergence at each token position between target distribution \(p\) and reference distribution \(q\), ie. \(\mathbb{E}_{x \sim p}[\log (p(x)/q(x))]\) is estimated with \(\log (p(x)/q(x))\) sampling the actual token \(x\). But the variance of this estimator based over sampled tokens \(x\) is high, which lead to training instability.</p>
+
+      <h2>Contributor of variance in the k1 estimator</h2>
+      <p>Let \(r = p(x)/q(x), \delta = r - 1\). Then we can rewrite \(\log r\) assuming \(|\delta | \lt 1\) (ie. \(p\) and \(q\) are close) as:</p>
+      $$
+      \begin{aligned}
+      \log r
+      &= \log (1+ \delta) \\
+      &= \log (1) + \int_{0}^{\delta} \frac{\partial \log (1+ t)}{\partial t} dt \\
+      &= \log (1) + \int_{0}^{\delta} \frac{1}{1+t} dt \\
+      &= \log (1) + \int_{0}^{\delta} (1- t + t^2 - t^3 + ...) dt \ \ \text{ if } |\delta| \lt 1 \\
+      &= \log (1) + \left[t- \frac{t^2}{2} + \frac{t^3}{3} - \frac{t^4}{4} + ...\right]_{0}^{\delta} \\
+      &= \left[t- \frac{t^2}{2} + \frac{t^3}{3} - \frac{t^4}{4} + ...\right]_{0}^{\delta} \\
+      &= \delta - \frac{\delta^2}{2} + \frac{\delta^3}{3} - \frac{\delta^4}{4} + ...
+      \end{aligned}
+      $$
+      <p>The derivation uses the fact that the geometric series of \(1/(1+t)\) is \(1- t + t^2 - t^3 + ...\). If \(|\delta| \ll 1\) meaning \(p\) and \(q\) are close, the linear term \(\delta\) dominates. If \(|\delta|\) is not far away from 1, then it is not guaranteed that the linear term dominates, for example when \(\delta=0.9, \delta^2 = 0.81\).</p>
+
+      <h2>Add a 0-expectation term \(1/r-1\)</h2>
+      <p>The term \(1/r-1\) has an expectation over tokens of 0, so it can be added to the k1 estimator \(\log r\) without changing the expectation (”k3”):</p>
+      $$
+      \begin{aligned}
+      \mathbb{E}_{x \sim p} [\frac{1}{r}-1]
+      &= \mathbb{E}_{x \sim p} [\frac{q(x)}{p(x)}-1] \\
+      &= \sum_{x}p(x) (\frac{q(x)}{p(x)}-1) \\
+      &= \sum_{x}(q(x) - p(x)) \\
+      &= \sum_{x}q(x) - \sum_{x}p(x) \\
+      &= 1 - 1 = 0 \\
+      \therefore \mathbb{E}_{x \sim p}[\log r] &= \mathbb{E}_{x \sim p}[\log r + \frac{1}{r} - 1]
+      \end{aligned}
+      $$
+
+      <h2>Geometric series of the 0-expectation term</h2>
+      <p>If we expand \(1/r\) around 1, given \(|\delta | \lt 1\), we get:</p>
+      $$
+      \begin{aligned}
+      \frac{1}{r} &= \frac{1}{1+\delta} = 1 - \delta + \delta^2 - \delta^3 + ... \\
+      \therefore \frac{1}{r} -1 &= - \delta + \delta^2 - \delta^3 + ...
+      \end{aligned}
+      $$
+      <p>which has a negative linear term \(- \delta\) that can cancel with the positive linear term in the k1 estimator.</p>
+
+      <h2>Cancelling the linear term</h2>
+      <p>When we expand the new k3 estimator, we get:</p>
+      $$
+      \begin{aligned}
+      (\log r) + (\frac{1}{r}) - 1
+      &= (\delta - \frac{\delta^2}{2} + \frac{\delta^3}{3} - \frac{\delta^4}{4} + ...) + (- \delta + \delta^2 - \delta^3 + ...) \\
+      &= \frac{\delta^2}{2} - \frac{2 \delta^3}{3} + \frac{3 \delta^4}{4} - \frac{4 \delta^5}{5} + ...
+      \end{aligned}
+      $$
+      <p>The resulting estimator has lower fluctuation when \(\delta\) is small. Since the formula has no linear term, when \(|\delta| \ll 1\), \(\delta^2/2\) dominates. So the fluctuation is smaller than if it has a linear term.</p>
+
+      <h2>K3 estimator is non-negative</h2>
+      <p>We can prove that k3 is nonnegative by first finding its global minimum given \(\delta\):</p>
+      $$
+      \begin{aligned}
+      \text{Let } f(\delta) &= \log (1+\delta) + (\frac{1}{1+\delta}) - 1 \\
+      \therefore f'(\delta) &= \frac{1}{1+\delta} + \frac{1}{(1+\delta)^2} - 1 \\
+      &= \frac{\delta}{(1+\delta)^2} \\
+      \because f'(\delta) &= \frac{\delta}{(1+\delta)^2} = \begin{cases} \lt 0 & \delta \lt 0 \\ 0 & \delta = 0 \\ \gt 0 & \delta \gt 0 \end{cases} \\
+      \therefore \delta &\text{ is the global minimum} \\
+      \therefore \text{min}f(\delta) &= 0
+      \end{aligned}
+      $$
+
+      <h2>K3 estimator has lower fluctuation than K1 when \(|\delta| \ll 1\), but not lower variance overall</h2>
+      <p>Since k1 value is \(O(\epsilon)\) and k3 value is \(O(\epsilon^2)\), k1’s variance is \(O(\epsilon^2)\) and k3’s variance is \(O(\epsilon^4)\). 1. At \(|\delta| \ll 1\), k3’s variance is dominated by the \(\delta^4\) term so smaller than k1’s dominating \(\delta^2\) term. However, 2. at \(|\delta|\lt1\) but not \(|\delta| \ll 1\), k3’s variance is not necessarily smaller even with a leading \(\delta^4\) term. This can be seen by decomposing k3’s variance into k1’s variance with an extra term:</p>
+      $$
+      \begin{aligned}
+      \text{Var}(k3) &= \text{Var}(k1 + C) \\
+      &= \text{Var}(k1) + \text{Var}(C) + 2 \text{Cov}(k1, C) \\
+      \therefore \text{Var}(k3) - \text{Var}(k1) &= \text{Var}(C) + 2 \text{Cov}(k1, C)
+      \end{aligned}
+      $$
+      <p>Since it can be shown that the right-hand side is not necessarily negative, we cannot claim that k3 has lower variance than k1.</p>
+
+      <h2 class="citation-heading">Citation</h2>
+      <pre><code>@misc{he2026klvariance,
+  author = {He, Muyu},
+  title  = {Reducing the variance in KL estimator},
+  year   = {2026},
+  url    = {https://riddlehe.github.io/blog/reducing-kl-estimator-variance.html}
+}</code></pre>
+
+      <a class="back-link post-footer-link" href="../blog.html">&larr; Back to all posts</a>
+    </article>
+
+    <footer class="footer">Muyu He &copy; 2026</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false }
+      ],
+      throwOnError: false
+    });
+  </script>
+</body>
+</html>

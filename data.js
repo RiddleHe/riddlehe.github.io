@@ -95,6 +95,12 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
+    title: "Reducing the variance in KL estimator",
+    date: "2026-08-20",
+    slug: "blog/reducing-kl-estimator-variance.html",
+    blurb: "The variance of this estimator based over sampled tokens x is high, which lead to training instability.",
+  },
+  {
     title: "Gated Transformer",
     date: "2026-08-14",
     slug: "blog/gated-transformer.html",
