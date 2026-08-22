@@ -49,7 +49,7 @@ const PAPERS = [
     venue: "EMNLP 2026",
     status: "",
     cited: 0,
-    thumb: "assets/papers/valuebank.png",
+    thumb: "assets/papers/valuebank.png?v=20260821-fig1",
     url: "https://github.com/RiddleHe/nanochat/blob/master/papers/bank_of_values.pdf",
     bullets: [
       "Deep layers benefit from context-free value vectors that preserve original token information",
@@ -57,11 +57,23 @@ const PAPERS = [
     ],
   },
   {
+    title: "YC-Bench: Benchmarking AI Agents for Long-Term Planning and Consistent Execution",
+    venue: "COLM 2026",
+    status: "",
+    cited: 4,
+    thumb: "assets/papers/yc-bench.png?v=20260821-fig1",
+    url: "https://arxiv.org/abs/2604.01212",
+    bullets: [
+      "A long-horizon benchmark where agents run a simulated startup over one year and hundreds of turns",
+      "Tests planning under uncertainty, delayed feedback, persistent memory, and adaptation to compounding mistakes",
+    ],
+  },
+  {
     title: "High-fidelity Simulations of Human Traits for Testing Agents",
     venue: "ACL 2026",
     status: "Oral",
     cited: 9,
-    thumb: "assets/papers/impatient.png",
+    thumb: "assets/papers/impatient.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2510.04491",
     bullets: [
       "Training-free, fine-grained control of LLM personality via per-layer activation steering",
@@ -73,7 +85,7 @@ const PAPERS = [
     venue: "EMNLP 2025",
     status: "",
     cited: 8,
-    thumb: "assets/papers/turnabout.png",
+    thumb: "assets/papers/turnabout.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2505.15712",
     bullets: [
       "A deductive-reasoning benchmark built from detective games, testing evidence-based contradiction finding",
@@ -84,7 +96,7 @@ const PAPERS = [
     venue: "COLM 2024",
     status: "",
     cited: 51,
-    thumb: "assets/papers/commonsense.png",
+    thumb: "assets/papers/commonsense.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2406.07546",
     bullets: [
       "A challenge benchmark probing whether text-to-image models understand everyday commonsense",
