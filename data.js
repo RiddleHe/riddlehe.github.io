@@ -50,7 +50,7 @@ const PAPERS = [
     status: "",
     cited: 0,
     thumb: "assets/papers/valuebank.png?v=20260821-fig1",
-    url: "https://github.com/RiddleHe/nanochat/blob/master/papers/bank_of_values.pdf",
+    url: "https://arxiv.org/abs/2606.02780",
     bullets: [
       "Deep layers benefit from context-free value vectors that preserve original token information",
       "“Bank of Values” learns a value table for the last third of layers, with no V cache, beating standard attention",
