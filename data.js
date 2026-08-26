@@ -110,7 +110,7 @@ const POSTS = [
     title: "Disabling Attention Layers",
     date: "2026-08-25",
     slug: "blog/disabling-attention-layers.html",
-    blurb: "",
+    blurb: "Only a very small number of final attention layers are necessary—but not sufficient—for extracting entity information from context.",
   },
   {
     title: "Reducing the variance in KL estimator",
