@@ -24,11 +24,13 @@
       <h1 class="post-h1">Disabling Attention Layers</h1>
       <p class="post-meta">August 25, 2026 &middot; Muyu He</p>
 
-      <p>I found that only a very small number of final attention layers are necessary (but not sufficient) for extracting entity information from context.</p>
+      <p>This blog documents chronologically experiments I run to discover peculiar attention patterns in transformers.</p>
 
       <div class="research-log">
         <section class="research-entry" aria-labelledby="entry-2026-08-25">
           <h2 class="entry-date-divider" id="entry-2026-08-25"><span>August 25, 2026</span></h2>
+
+          <p>I found that only a very small number of final attention layers are necessary (but not sufficient) for extracting entity information from context.</p>
 
           <p><strong>The setup.</strong> I ran four templates on 100 entity names each. For example, one of them is: "My friend is [Einstein]. You need to tell me the name of my friend. Answer with only the name: ". All four purport to contain an entity token like "Einstein". Intuitively, a good transformer base model can easily answer with the name in the output.</p>
 
@@ -47,7 +49,6 @@
             <figcaption>Incorrect outputs by attention ablation: four-layer sliding spans versus disabling layers 0–30.</figcaption>
           </figure>
 
-          <p>Blog write-up: <a href="https://riddlehe.github.io/blog/disabling-attention-layers.html">riddlehe.github.io/blog/disabling-attention-layers.html</a>.</p>
         </section>
       </div>
 
