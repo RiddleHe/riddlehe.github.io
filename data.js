@@ -107,6 +107,12 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
+    title: "Disabling Attention Layers",
+    date: "2026-08-25",
+    slug: "blog/disabling-attention-layers.html",
+    blurb: "",
+  },
+  {
     title: "Reducing the variance in KL estimator",
     date: "2026-08-20",
     slug: "blog/reducing-kl-estimator-variance.html",
