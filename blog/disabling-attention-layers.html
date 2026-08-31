@@ -50,6 +50,34 @@
           </figure>
 
         </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-08-28" data-source-url="https://x.com/HeMuyu0327/status/2093536850548048257">
+          <h2 class="entry-date-divider" id="entry-2026-08-28"><span>August 28, 2026</span></h2>
+
+          <p>It's interesting that on a very simple prompt template, by removing all tokens' attention except the last prompt token's to an entity token (eg. "Einstein"), the first 2/3 attention layers are neither necessary nor sufficient for extracting that info for next token prediction.</p>
+
+          <p><strong>The setup.</strong> I've done this experiment previously, but in a slightly unprincipled way. I want to measure in a prompt template "Remember the name [name (eg. "Einstein")]. Question: what is the name? Answer:", which attention layers in the final token ":" is responsible for extracting Einstein info. But I didn't prevent data leakage because all other prompt tokens, as well as following generation tokens, can attend to "Einstein". So now I have removed all their attention to "Einstein" so the final token is the single source for extracting Einstein info.</p>
+
+          <p><strong>The result.</strong> 1. I find that removing L0-19 of a 32-layer Qwen3-8B has no effects on 100 entity examples. 2. I find that removing the later layers has a very specific pattern: L20-24 seems to block the information quite a bit, but then the model recovers, and then in L31-35 the model collapses. I validated this on various block sizes of consecutive layers, and found that they produce correlated patterns. So there are some subset of deep layers that are necessary and sufficient for extracting entity info in earlier context.</p>
+
+          <p><strong>The strange finding.</strong> Some of the degenerate outputs after blocking L31-35 have a very peculiar behavior: for example, the model mistakes Tolkien for JK Rowling and Gandhi for Greta Thunberg. This seems to suggest that the model prioritizes abstract feature of the entity (occupation, domain, etc.) rather than the "name" of the entity. -- This is a very Feynman idea as he says that the least important feature of a concept is its name :).</p>
+
+          <p>Next up I will systematically ablate this feature extraction idea. And I will ablate on more templates. Blog write-up on this topic: <a href="https://riddlehe.github.io/blog/disabling-attention-layers.html">riddlehe.github.io/blog/disabling-attention-layers.html</a></p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2093536850548048257-1.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2093536850548048257-1.jpg" alt="Correct entity-recall outputs by starting layer when attention is disabled in a sliding four-layer span, compared with disabling layers 0–19." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Correct outputs for four-layer sliding ablations, with the layers 0–19 ablation retaining 100/100 accuracy.</figcaption>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2093536850548048257-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2093536850548048257-2.png" alt="Correct entity-recall outputs by starting layer for sliding attention ablations spanning four, six, or eight layers." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Correct outputs across four-, six-, and eight-layer sliding ablations.</figcaption>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
