@@ -78,6 +78,36 @@
             <figcaption>Correct outputs across four-, six-, and eight-layer sliding ablations.</figcaption>
           </figure>
         </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-09-04" data-source-url="https://x.com/HeMuyu0327/status/2096047252976607382">
+          <h2 class="entry-date-divider" id="entry-2026-09-04"><span>September 4, 2026</span></h2>
+
+          <p>Found an interesting phenomenon of attention: to properly attend to a target token in a forward pass, LLMs need the other tokens to also attend to that same token. Otherwise, it might decide to not attend to it enough.</p>
+
+          <p><strong>The motivation.</strong> I was studying which sets of layers are necessarily / sufficient for extracting information from a target token. In one of my 100 examples, it involves a question including the entity token [Einstein] and demands the model to predict, for the next token, [Einstein] again. To ensure the model is not cheating by attending to other tokens which has computed attention from [Einstein], all intermediate tokens other than the final prompt token have their attention to [Einstein] removed.</p>
+
+          <p><strong>The surprisingly finding</strong>, independent of the main results, is that depending on the template of the question, having full attention from the last token to the entity token at every layer may or may not recover entity information. Specifically, if we ask "Remember this name: [Einstein]. What is the name? Answer:", the model can often recover [Einstein] and other entity tokens precisely, but if we ask "I have a friend called [Einstein]. Who is the friend? Answer:", the model fails in a large number of cases.</p>
+
+          <p><strong>The interpretability experiments.</strong> To see what happens to the erring template before vs after attention from intermediate tokens is removed, I plot the last token's per-layer max attention across heads over the prompt prefix, including the [entity] token. Among two erring templates and two functioning templates, the biggest difference is that, after attention from intermediate tokens is removed, the last token's attention to [entity] is significantly reduced. There are no other attention anomalies that cannot be explained by the decrease of this attention slot alone.</p>
+
+          <p><strong>The ablation.</strong> My hypothesis is that sufficient attention to [entity] is enough to recover the entity info for next token prediction. The alternative is that sufficient attention to [entity] from intermediate tokens themselves is required, and that even with enough attention to [entity] from the last token, the outputs will still be wrong. To prove the hypothesis, I simply recover the last token's attention scores to [entity] before intermediate tokens' attention to [entity] is disabled, without touching the last token's attention scores to the intermediate tokens. As a result, the attention scores will sum to 1, and only differ in having greater attention to [entity] from the last token.</p>
+
+          <p>I find that the performance of the model to extract entity info is fully recovered, after patching just the attention scores. This is then clear evidence that the errors stem entirely from insufficient attention to [entity]. Since the only causal factor for the attention decline is that intermediate tokens no longer attend to [entity] themselves, the finding is: their attention to [entity] is causally impactful for the last token to attend to [entity] properly.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2096047252976607382-1.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2096047252976607382-1.jpg" alt="Final prompt-token attention heatmaps for Friend and Person in List under ordinary and bottleneck conditions, plus their differences." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Mean over 100 entities of maximum post-softmax attention across heads for Friend and Person in List: ordinary, bottleneck, and bottleneck minus ordinary.</figcaption>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2096047252976607382-2.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2096047252976607382-2.jpg" alt="Final prompt-token attention heatmaps for Direct Fact and Visitor Register under ordinary and bottleneck conditions, plus their differences." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Mean over 100 entities of maximum post-softmax attention across heads for Direct Fact and Visitor Register: ordinary, bottleneck, and bottleneck minus ordinary.</figcaption>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
