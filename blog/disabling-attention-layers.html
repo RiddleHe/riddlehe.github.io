@@ -27,30 +27,6 @@
       <p>This blog documents chronologically experiments I run to discover peculiar attention patterns in transformers.</p>
 
       <div class="research-log">
-        <section class="research-entry" aria-labelledby="entry-2026-08-25">
-          <h2 class="entry-date-divider" id="entry-2026-08-25"><span>August 25, 2026</span></h2>
-
-          <p>I found that only a very small number of final attention layers are necessary (but not sufficient) for extracting entity information from context.</p>
-
-          <p><strong>The setup.</strong> I ran four templates on 100 entity names each. For example, one of them is: "My friend is [Einstein]. You need to tell me the name of my friend. Answer with only the name: ". All four purport to contain an entity token like "Einstein". Intuitively, a good transformer base model can easily answer with the name in the output.</p>
-
-          <p><strong>The intervention.</strong> I disable the attention to "Einstein" and for a consecutive 4 attention layers. This "sliding window" of disabled layers goes from L0-3, L1-4, ... all the way to L32-35, for Qwen3-8B.</p>
-
-          <p><strong>The finding.</strong> I found that only when disabling L31-34 and L32-25, ie. the very final layers, do we see a surge in incorrect answers. For example, i see outputs like: "I do not know the name of this friend." This shows that only the final few attention layers are necessary for extracting the entity info.</p>
-
-          <p>There are also some fascinating corner cases: whereas the good baseline will answer "Musk" if the context says "my friend is Musk", the perturbation causes the model to say "Elon" instead. -- I take this to hint that whereas the exact token is destroyed by disabling attention, the relevant entity info (the "Elon-Musk-ness") is leaked into other context tokens, so the model can recover the person, just not the right name.</p>
-
-          <p>However, the final attention layers are not sufficient. I then disabled L0-30 attention completely, to see if the model can still extract Einstein info and the like from L31-35. -- They can't most of the time. But even surprisingly some sequences still recover the right info, after losing 5/6 of all attention layers! This is pretty amazing and funny to me. So I have designed quite a few follow-ups to have more fun.</p>
-
-          <figure class="research-figure">
-            <a href="../assets/blog/disabling-attention-layers/2092464013087015269-1.webp" target="_blank" rel="noopener">
-              <img src="../assets/blog/disabling-attention-layers/2092464013087015269-1.webp" alt="Incorrect outputs across four entity-recall templates when consecutive attention-layer spans are disabled in Qwen3-8B." width="640" loading="lazy" decoding="async" />
-            </a>
-            <figcaption>Incorrect outputs by attention ablation: four-layer sliding spans versus disabling layers 0–30.</figcaption>
-          </figure>
-
-        </section>
-
         <section class="research-entry" aria-labelledby="entry-2026-08-28" data-source-url="https://x.com/HeMuyu0327/status/2093536850548048257">
           <h2 class="entry-date-divider" id="entry-2026-08-28"><span>August 28, 2026</span></h2>
 
