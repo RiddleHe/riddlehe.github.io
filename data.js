@@ -107,6 +107,12 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
+    title: "Deriving the full-rank solution to optimizer with frobenius norm constraints",
+    date: "2026-09-10",
+    slug: "blog/full-rank-frobenius-norm-optimizer.html",
+    blurb: "The full-order exact solution when the norm constraint is both on the matrix update and on the next updated matrix.",
+  },
+  {
     title: "Disabling Attention Layers",
     date: "2026-08-25",
     slug: "blog/disabling-attention-layers.html",

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deriving the full-rank solution to optimizer with frobenius norm constraints — Muyu He</title>
+  <link rel="icon" type="image/png" href="../assets/avatar.png" />
+  <link rel="apple-touch-icon" href="../assets/avatar.png" />
+  <meta name="description" content="The full-order exact solution when the Frobenius norm constraint is both on the matrix update and on the next updated matrix." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+</head>
+<body>
+  <main class="page">
+    <nav class="topnav">
+      <a href="../index.html">Home</a>
+      <a href="../blog.html" class="active">Blog</a>
+    </nav>
+
+    <article class="post">
+      <a class="back-link" href="../blog.html">&larr; Blog</a>
+      <h1 class="post-h1">Deriving the full-rank solution to optimizer with frobenius norm constraints</h1>
+      <p class="post-meta">September 10, 2026 &middot; Muyu He</p>
+
+      <p>Given a weight matrix \(W\) and its gradient \(G\), we want to find an update \(\Delta W\) that minimizes the loss.</p>
+
+      <h2>The linear approximation of the loss term</h2>
+      <p>The linear approximation of the loss term in the matrix case is:</p>
+      $$
+      \begin{gathered}
+      \because \mathcal{L}(W + \Delta W) \approx \mathcal{L}(W) + \langle G, \Delta W \rangle_{F} \\
+      \therefore \text{min}_{\Delta W} \mathcal{L}(W + \Delta W)  \propto \text{min}_{\Delta W} \langle G, \Delta W \rangle_{F} \\
+      \propto \text{min}_{\Phi} \langle G, -\Phi \rangle_{F} \text{ for } \Delta W = -\eta \Phi
+      \end{gathered}
+      $$
+      <p>Since \(\mathcal{L}(W)\) is fixed, we minimize the first-order term \(\langle G, \Delta W \rangle_F\). For a fixed \(\eta \gt 0\), substituting \(\Delta W = -\eta \Phi\) gives \(-\eta \langle G, \Phi \rangle_F\). Minimizing this negative product is therefore equivalent to maximizing \(\langle G, \Phi \rangle_F\).</p>
+      <p>Since \(\langle G, \Phi \rangle_{F}\) is the dot product of the two flattened matrices and \(||\Phi||_F\) is the L2 norm of the flattened \(\Phi\), the constraint \(||\Phi||_F = 1\) is essentially the same as the L2 norm constraint on an update vector \(||\varphi||_2 = 1\).</p>
+
+      <h2>When the norm constraint is both on matrix update \(\Delta W\) and on next updated matrix \(W\)</h2>
+      <p>The exact objective:</p>
+      $$
+      \begin{gathered}
+      \text{max}_{\Phi} \langle G, \Phi \rangle_F \ \ \text{s.t.} \ \ ||\Phi||_F = 1, \ ||W - \eta \Phi||_F = 1 \text{  \ \  given  \ \  } ||W||_F = 1
+      \end{gathered}
+      $$
+      <p>The derivation is exactly the same as in the vector case, with an first-order exact solution, a non-exact solution (”Hyperball” [<a href="https://arxiv.org/abs/2606.16899">Paper</a>]), and a full-order exact solution. The full-order exact solution is derived as follows, exactly the same as in the vector case:</p>
+      $$
+      \begin{gathered}
+      \because ||W - \eta \Phi||_F = 1 \\
+      = \sqrt{\sum_{ij} (W_{ij} - \eta \Phi_{ij})^2} \\
+      = \sqrt{\sum_{ij} (W_{ij}^2 - 2\eta W_{ij}\Phi_{ij} + \eta^2 \Phi_{ij}^2) } \\
+      \therefore ||W - \eta \Phi||_F^2 = 1 \\
+      = \sum_{ij} (W_{ij}^2 - 2\eta W_{ij}\Phi_{ij} + \eta^2 \Phi_{ij}^2) \\
+      = \sum_{ij}W_{ij}^2 -\sum_{ij} 2\eta W_{ij}\Phi_{ij} + \sum_{ij} \eta^2 \Phi_{ij}^2 \\
+      = ||W||_F^2 + \eta^2||\Phi||_F^2 -2\eta \langle W, \Phi \rangle_F  \\
+      \because ||W||_F = ||\Phi||_F = 1 \\
+      \therefore 1 + \eta^2 - 2\eta \langle W, \Phi \rangle_F = 1 \\
+      \therefore \langle W, \Phi \rangle_F = \frac{\eta}{2}
+      \end{gathered}
+      $$
+
+      $$
+      \begin{gathered}
+      \text{Let } V \text{ s.t. } \langle W, V \rangle_F  = 0 \\
+      \text{ and } \text{vec}(\Phi) = \langle W, \Phi \rangle_F \cdot \text{vec}(W) + \text{vec}(V) \\
+      \therefore \Phi = \langle W, \Phi \rangle_F \cdot W + V \\
+      = \frac{\eta}{2}W + V \\
+      \therefore \text{max}_{\Phi} \langle G, \Phi \rangle_F = \text{max}_{\Phi}\langle G, \frac{\eta}{2}W + V  \rangle_F \\
+      = \langle G, \frac{\eta}{2} W \rangle_F + \text{max}_{V}\langle G,  V  \rangle_F
+      \end{gathered}
+      $$
+
+      $$
+      \begin{gathered}
+      \because ||\Phi||_F^2 \\
+      =  ||\frac{\eta}{2}W + V||_F^2 \\
+      = \sum_{ij}(\frac{\eta}{2}W_{ij}+V_{ij})^2 \\
+      = \sum_{ij} (\frac{\eta^2}{4}W_{ij}^2 + \eta W_{ij}V_{ij} + V_{ij}^2) \\
+      = \sum_{ij} \frac{\eta^2}{4}W_{ij}^2 + \sum_{ij} \eta W_{ij}V_{ij} + \sum_{ij}V_{ij}^2 \\
+      = \frac{\eta^2}{4}||W||_F^2 + \eta \langle W, V \rangle_F + ||V||_F^2 \\
+      = \frac{\eta^2}{4} \cdot 1 + \eta \cdot 0 + ||V||_F^2 = 1 \\
+      \therefore ||V||_F^2 = 1 - \frac{\eta^2}{4} \\
+      \therefore ||V||_F = \sqrt{1 - \frac{\eta^2}{4}}
+      \end{gathered}
+      $$
+
+      $$
+      \begin{gathered}
+      \because \langle G,  V  \rangle_F = \langle G - \langle G, W \rangle_F \cdot W,  V  \rangle_F \\
+      \therefore \langle G,  V  \rangle_F \leq ||G - \langle G, W \rangle_F \cdot W||_F\cdot ||V||_F \\
+      = \sqrt{1 - \frac{\eta^2}{4}} ||G - \langle G, W \rangle_F \cdot W||_F \\
+      \therefore V_* \propto G - \langle G, W \rangle_F \cdot W \\
+      \therefore V_*  =  \sqrt{1 - \frac{\eta^2}{4}} \frac{(G - \langle G, W \rangle_F \cdot W )}{||G - \langle G, W \rangle_F \cdot W ||_F} \\
+      \therefore \Phi_* = \frac{\eta}{2}W + \sqrt{1 - \frac{\eta^2}{4}} \frac{(G - \langle G, W \rangle_F \cdot W )}{||G - \langle G, W \rangle_F \cdot W ||_F}
+      \end{gathered}
+      $$
+
+      <p>Source: <a href="https://www.notion.so/2f86435b2cf9800cb707cd6ddc0997cf">Learnings</a> — “How optimizers are designed w.r.t. minimizing an objective given a norm constraint”.</p>
+
+      <h2 class="citation-heading">Citation</h2>
+      <pre><code>@misc{he2026frobeniusoptimizer,
+  author = {He, Muyu},
+  title  = {Deriving the full-rank solution to optimizer with frobenius norm constraints},
+  year   = {2026},
+  url    = {https://riddlehe.github.io/blog/full-rank-frobenius-norm-optimizer.html}
+}</code></pre>
+
+      <a class="back-link post-footer-link" href="../blog.html">&larr; Back to all posts</a>
+    </article>
+
+    <footer class="footer">Muyu He &copy; 2026</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false }
+      ],
+      throwOnError: false
+    });
+  </script>
+</body>
+</html>
