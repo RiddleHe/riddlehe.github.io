@@ -46,7 +46,7 @@
       \text{max}_{\Phi} \langle G, \Phi \rangle_F \ \ \text{s.t.} \ \ ||\Phi||_F = 1, \ ||W - \eta \Phi||_F = 1 \text{  \ \  given  \ \  } ||W||_F = 1
       \end{gathered}
       $$
-      <p>The derivation is exactly the same as in the vector case, with an first-order exact solution, a non-exact solution (”Hyperball” [<a href="https://arxiv.org/abs/2606.16899">Paper</a>]), and a full-order exact solution. The full-order exact solution is derived as follows, exactly the same as in the vector case:</p>
+      <p>The full-order exact solution is derived as follows, exactly the same as in the vector case:</p>
       $$
       \begin{gathered}
       \because ||W - \eta \Phi||_F = 1 \\
@@ -97,8 +97,6 @@
       \therefore \Phi_* = \frac{\eta}{2}W + \sqrt{1 - \frac{\eta^2}{4}} \frac{(G - \langle G, W \rangle_F \cdot W )}{||G - \langle G, W \rangle_F \cdot W ||_F}
       \end{gathered}
       $$
-
-      <p>Source: <a href="https://www.notion.so/2f86435b2cf9800cb707cd6ddc0997cf">Learnings</a> — “How optimizers are designed w.r.t. minimizing an objective given a norm constraint”.</p>
 
       <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026frobeniusoptimizer,
