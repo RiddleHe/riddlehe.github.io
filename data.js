@@ -24,7 +24,7 @@ const REPOS = [
   {
     name: "llm-interp",
     owner: "RiddleHe",
-    stars: 91,
+    stars: 92,
     url: "https://github.com/RiddleHe/llm-interp",
     bullets: [
       "Reproducible interpretability scripts for model-circuit research",
@@ -60,7 +60,7 @@ const PAPERS = [
     title: "YC-Bench: Benchmarking AI Agents for Long-Term Planning and Consistent Execution",
     venue: "COLM 2026",
     status: "",
-    cited: 4,
+    cited: 6,
     thumb: "assets/papers/yc-bench.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2604.01212",
     bullets: [
@@ -72,7 +72,7 @@ const PAPERS = [
     title: "High-fidelity Simulations of Human Traits for Testing Agents",
     venue: "ACL 2026",
     status: "Oral",
-    cited: 9,
+    cited: 10,
     thumb: "assets/papers/impatient.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2510.04491",
     bullets: [
@@ -84,7 +84,7 @@ const PAPERS = [
     title: "Evaluating Deductive Reasoning via Detective Games",
     venue: "EMNLP 2025",
     status: "",
-    cited: 8,
+    cited: 9,
     thumb: "assets/papers/turnabout.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2505.15712",
     bullets: [
@@ -143,8 +143,8 @@ const PROFILE = {
   email: "muyuhe0327@gmail.com",
   x: "https://x.com/HeMuyu0327",
   github: "https://github.com/RiddleHe",
-  githubStars: 383,
+  githubStars: 384,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
-  citations: 76,
+  citations: 81,
   resume: "resume.pdf",
 };
