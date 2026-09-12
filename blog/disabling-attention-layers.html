@@ -84,6 +84,36 @@
             <figcaption>Mean over 100 entities of maximum post-softmax attention across heads for Direct Fact and Visitor Register: ordinary, bottleneck, and bottleneck minus ordinary.</figcaption>
           </figure>
         </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-09-12" data-source-url="https://x.com/HeMuyu0327/status/2098854272788271231">
+          <h2 class="entry-date-divider" id="entry-2026-09-12"><span>September 12, 2026</span></h2>
+
+          <p>I previously discovered that in an entity-retrieval task, ("My friend is [Einstein]. My friend's name is "), attention to the [entity] token ("[Einstein]") alone is sufficient. Another question is whether attention to the entity token is necessary. Since every other prompt token has already attended to [entity], can LLMs recover entity info from attending to the intermediate prompt tokens alone?</p>
+
+          <p><strong>The setup.</strong> I disabled the last prompt token (the one doing the completion)'s attention to [entity], but allowed its attention to every intermediate prompt token. Every intermediate token has already computed attention to [entity]. Then on four prompt templates, I ran 100 entities and recorded the model's completion.</p>
+
+          <p><strong>The result.</strong> Interestingly, there are almost no recovery from the disabling to produce correct outputs, showing that at least generalizing from these four templates, attention to [entity] token is a necessary condition to extract entity info. This is in contrast with an earlier experiment I did, which disables intermediate tokens' attention to [entity] but restores the last token's attention to [entity] to baseline level. In that experiment, we get almost full recovery.</p>
+
+          <p><strong>The qualifying condition.</strong> However, I also found that [entity] token is not always a necessary condition, with the presence of an indefinite description that describes the entity ("...[Einstein] (a physicist)..."). The indefinite description does not uniquely pick out the entity, so the model cannot cheat with it to produce the correct continuation. But running again with the description inserted into the prompt, I found that a substantial amount of prompts have recovered to produce correct outputs. This shows, interestingly, that some semantically relevant tokens do "absorb entity info" into them, enabling the model to look at them instead to extract entity info.</p>
+
+          <p>To prove that the correct continuations are not just due to the indefinite description providing a "hint", i replace [entity] with "x" as the token, and the model again fails to recover the entity in almost all cases. Instead, there is a high recovery success of "x" as the entity. This rules out the confounding variable that the model is doing clever guessing.</p>
+
+          <p>Next up I will look into what phrases can enable this "entity info shift", and which attention layers are responsible.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2098854272788271231-1.webp" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2098854272788271231-1.webp" alt="Entity recovery across four prompt templates with intermediate attention disabled, last-token attention restored, or last-token attention disabled while intermediate attention remains native." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Entity recovery across attention interventions for Qwen3-8B-Base, with 100 entities per template.</figcaption>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/disabling-attention-layers/2098854272788271231-2.webp" target="_blank" rel="noopener">
+              <img src="../assets/blog/disabling-attention-layers/2098854272788271231-2.webp" alt="Original-name recovery and x recovery across four prompt templates with last-token attention disabled, comparing indefinite descriptions and replacement of the entity with x." width="640" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Original-name recovery and x recovery with last-token attention disabled, with 100 cases per template.</figcaption>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
