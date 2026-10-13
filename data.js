@@ -4,7 +4,7 @@ const REPOS = [
   {
     name: "nanochat",
     owner: "RiddleHe",
-    stars: 58,
+    stars: 59,
     url: "https://github.com/RiddleHe/nanochat",
     bullets: [
       "Hackable pretraining stack from karpathy/nanochat with easy architecture definition and FLOP-controlled ablations",
@@ -14,7 +14,7 @@ const REPOS = [
   {
     name: "spider",
     owner: "collinear-ai",
-    stars: 109,
+    stars: 110,
     url: "https://github.com/collinear-ai/spider",
     bullets: [
       "Cross-tokenizer alignment for on-policy distillation across any teacher–student pair",
@@ -34,7 +34,7 @@ const REPOS = [
   {
     name: "gpt-oss-alignment",
     owner: "RiddleHe",
-    stars: 125,
+    stars: 123,
     url: "https://github.com/RiddleHe/gpt-oss-alignment",
     bullets: [
       "Jailbreak via chat-template removal, exposing the fragility of post-trained alignment",
@@ -48,7 +48,7 @@ const PAPERS = [
     title: "Do Value Vectors in Deep Layers Need Context from the Residual Stream?",
     venue: "EMNLP 2026",
     status: "",
-    cited: 0,
+    cited: 1,
     thumb: "assets/papers/valuebank.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2606.02780",
     bullets: [
@@ -60,7 +60,7 @@ const PAPERS = [
     title: "YC-Bench: Benchmarking AI Agents for Long-Term Planning and Consistent Execution",
     venue: "COLM 2026",
     status: "",
-    cited: 6,
+    cited: 7,
     thumb: "assets/papers/yc-bench.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2604.01212",
     bullets: [
@@ -72,7 +72,7 @@ const PAPERS = [
     title: "High-fidelity Simulations of Human Traits for Testing Agents",
     venue: "ACL 2026",
     status: "Oral",
-    cited: 10,
+    cited: 11,
     thumb: "assets/papers/impatient.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2510.04491",
     bullets: [
@@ -95,7 +95,7 @@ const PAPERS = [
     title: "Commonsense-T2I: Can Text-to-Image Models Understand Commonsense?",
     venue: "COLM 2024",
     status: "",
-    cited: 51,
+    cited: 54,
     thumb: "assets/papers/commonsense.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2406.07546",
     bullets: [
@@ -145,6 +145,6 @@ const PROFILE = {
   github: "https://github.com/RiddleHe",
   githubStars: 384,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
-  citations: 81,
+  citations: 87,
   resume: "resume.pdf",
 };
