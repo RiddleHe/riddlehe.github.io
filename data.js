@@ -107,6 +107,12 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
+    title: "The importance of token embeddings to value vectors",
+    date: "2026-10-24",
+    slug: "blog/importance-of-token-embeddings-to-value-vectors.html",
+    blurb: "",
+  },
+  {
     title: "Deriving the full-rank solution to optimizer with frobenius norm constraints",
     date: "2026-09-10",
     slug: "blog/full-rank-frobenius-norm-optimizer.html",
