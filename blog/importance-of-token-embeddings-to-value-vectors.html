@@ -24,39 +24,45 @@
       <h1 class="post-h1">The importance of token embeddings to value vectors</h1>
       <p class="post-meta">October 24, 2026 &middot; Muyu He</p>
 
-      <p>I think it is only partially useful, when we attribute how &quot;important&quot; each prev layer output is to a following layer, to look at their norms or an associated scalar weight (like Attn Res). What this view misses is that each matrix has privileged input directions -- if an input has a larger projection on those directions, it will affect the norm of the output much more significantly than another input with the same norm.</p>
+      <div class="research-log">
+        <section class="research-entry" aria-labelledby="entry-2026-10-24" data-source-url="https://x.com/HeMuyu0327/status/2114176920623743282">
+          <h2 class="entry-date-divider" id="entry-2026-10-24"><span>October 24, 2026</span></h2>
 
-      <p>As a result, in a standard transformer of 780M, I break down each W_v/W_q/W_k matrix in each attention head across layers by input directions aligned with their singular values. These will be what the matrices want to &quot;look for&quot; in an input. Then, I feed each previous layer output, including the token embedding, into each decomposed matrix, to record how much relative to its norm does it project onto those top input directions (accounting for 90% of the squared singular values). This tells us whether any layer matters particularly for Q, K, or V.</p>
+          <p>I think it is only partially useful, when we attribute how &quot;important&quot; each prev layer output is to a following layer, to look at their norms or an associated scalar weight (like Attn Res). What this view misses is that each matrix has privileged input directions -- if an input has a larger projection on those directions, it will affect the norm of the output much more significantly than another input with the same norm.</p>
 
-      <p>My finding is that while no layer matters particularly in terms of direction for Q or K, the token embedding matters significantly for V, across all layers. This is very illuminating because our prev EMNLP paper, <a href="https://arxiv.org/abs/2606.02780">https://arxiv.org/abs/2606.02780</a>, uses ablations and validation losses only to reach the same conclusion. If we just look at the norm of the token embedding, it does not stand out among all layer outputs, yet it creates an outstanding projection to almost all W_v matrices&#x27; top input directions.</p>
+          <p>As a result, in a standard transformer of 780M, I break down each W_v/W_q/W_k matrix in each attention head across layers by input directions aligned with their singular values. These will be what the matrices want to &quot;look for&quot; in an input. Then, I feed each previous layer output, including the token embedding, into each decomposed matrix, to record how much relative to its norm does it project onto those top input directions (accounting for 90% of the squared singular values). This tells us whether any layer matters particularly for Q, K, or V.</p>
 
-      <p>To show that this large projection is not accidental, we can plot how much each W_v&#x27;s input directions are concentrated. We find that it is decently concentrated -- 80% of directions accounting for 90% of squared singular values, so an unusually large projection does mean token embeddings have privileged information.</p>
+          <p>My finding is that while no layer matters particularly in terms of direction for Q or K, the token embedding matters significantly for V, across all layers. This is very illuminating because our prev EMNLP paper, <a href="https://arxiv.org/abs/2606.02780">https://arxiv.org/abs/2606.02780</a>, uses ablations and validation losses only to reach the same conclusion. If we just look at the norm of the token embedding, it does not stand out among all layer outputs, yet it creates an outstanding projection to almost all W_v matrices&#x27; top input directions.</p>
 
-      <p>Ongoing work.</p>
+          <p>To show that this large projection is not accidental, we can plot how much each W_v&#x27;s input directions are concentrated. We find that it is decently concentrated -- 80% of directions accounting for 90% of squared singular values, so an unusually large projection does mean token embeddings have privileged information.</p>
 
-      <figure class="research-figure">
-        <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-1.png" target="_blank" rel="noopener">
-          <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-1.png" alt="GPTBase V input alignment for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
-        </a>
-      </figure>
+          <p>Ongoing work.</p>
 
-      <figure class="research-figure">
-        <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-2.png" target="_blank" rel="noopener">
-          <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-2.png" alt="GPTBase K input alignment for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
-        </a>
-      </figure>
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-1.png" alt="GPTBase V input alignment for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
 
-      <figure class="research-figure">
-        <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-3.jpg" target="_blank" rel="noopener">
-          <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-3.jpg" alt="Mean raw L2 norms of token embeddings and attention outputs across GPTBase layers." width="640" loading="lazy" decoding="async" />
-        </a>
-      </figure>
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-2.png" alt="GPTBase K input alignment for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
 
-      <figure class="research-figure">
-        <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-4.jpg" target="_blank" rel="noopener">
-          <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-4.jpg" alt="Number of V singular directions accounting for 90% of squared singular values, and numerical rank, by layer and head." width="640" loading="lazy" decoding="async" />
-        </a>
-      </figure>
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-3.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-3.jpg" alt="Mean raw L2 norms of token embeddings and attention outputs across GPTBase layers." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-4.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114176920623743282-4.jpg" alt="Number of V singular directions accounting for 90% of squared singular values, and numerical rank, by layer and head." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
+      </div>
 
       <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026tokenembeddings,
