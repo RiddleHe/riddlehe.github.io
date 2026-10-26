@@ -110,7 +110,7 @@ const POSTS = [
     title: "The importance of token embeddings to value vectors",
     date: "2026-10-24",
     slug: "blog/importance-of-token-embeddings-to-value-vectors.html",
-    blurb: "",
+    blurb: "A fundamental constraint in transformers: token embeddings highly align with value matrices' input directions, yet have minimal contributions to outputs.",
   },
   {
     title: "Deriving the full-rank solution to optimizer with frobenius norm constraints",

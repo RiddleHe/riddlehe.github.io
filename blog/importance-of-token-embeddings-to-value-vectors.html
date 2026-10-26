@@ -62,6 +62,38 @@
             </a>
           </figure>
         </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-10-25" data-source-url="https://x.com/HeMuyu0327/status/2114576979601346682">
+          <h2 class="entry-date-divider" id="entry-2026-10-25"><span>October 25, 2026</span></h2>
+
+          <p>I think it is a fundamental conflict in standard transformers that although its value matrices are &quot;looking for&quot; token embeddings as inputs, token embeddings end up having minimal contributions.</p>
+
+          <p>We can clearly see that value matrices are looking for token embeddings, because among all layer outputs that can go into the residual stream, only the token embedding consistently project a large portion of its norm onto top input dimensions of value matrices. In fact, if we compare how much the token embedding vs the complete residual stream projects itself onto value matrices, token embeddings across heads and layers almost always have a larger projection.</p>
+
+          <p>However, we can also see that token embeddings are not contributing much to value vectors, if at all. If we compute the squared norm of the output of value matrices giving only token embedding vs other layer outputs, we find that token embedding has the most negligible contribution.</p>
+
+          <p>This creates an intrigue -- are there architectural constraints pulling embeddings back in the hidden space? We believe so, from various places -- such as the fact that embedding is the only component in the residual stream that is layer-normed, before adding to the stream.</p>
+
+          <p>Ongoing work.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-1.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-1.jpg" alt="GPTBase QKV input alignment of the full residual stream across heads and layers; boxes mark V heads where full input alignment exceeds embedding-only alignment." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-2.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-2.jpg" alt="GPTBase V projected squared norms for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-3.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114576979601346682-3.png" alt="GPTBase V input alignment for token embeddings and attention outputs at a 50% squared-singular-value threshold." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
