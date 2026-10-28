@@ -4,7 +4,7 @@ const REPOS = [
   {
     name: "nanochat",
     owner: "RiddleHe",
-    stars: 59,
+    stars: 60,
     url: "https://github.com/RiddleHe/nanochat",
     bullets: [
       "Hackable pretraining stack from karpathy/nanochat with easy architecture definition and FLOP-controlled ablations",
@@ -14,7 +14,7 @@ const REPOS = [
   {
     name: "spider",
     owner: "collinear-ai",
-    stars: 110,
+    stars: 112,
     url: "https://github.com/collinear-ai/spider",
     bullets: [
       "Cross-tokenizer alignment for on-policy distillation across any teacher–student pair",
@@ -34,7 +34,7 @@ const REPOS = [
   {
     name: "gpt-oss-alignment",
     owner: "RiddleHe",
-    stars: 123,
+    stars: 124,
     url: "https://github.com/RiddleHe/gpt-oss-alignment",
     bullets: [
       "Jailbreak via chat-template removal, exposing the fragility of post-trained alignment",
@@ -72,7 +72,7 @@ const PAPERS = [
     title: "High-fidelity Simulations of Human Traits for Testing Agents",
     venue: "ACL 2026",
     status: "Oral",
-    cited: 11,
+    cited: 12,
     thumb: "assets/papers/impatient.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2510.04491",
     bullets: [
@@ -84,7 +84,7 @@ const PAPERS = [
     title: "Evaluating Deductive Reasoning via Detective Games",
     venue: "EMNLP 2025",
     status: "",
-    cited: 9,
+    cited: 10,
     thumb: "assets/papers/turnabout.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2505.15712",
     bullets: [
@@ -95,7 +95,7 @@ const PAPERS = [
     title: "Commonsense-T2I: Can Text-to-Image Models Understand Commonsense?",
     venue: "COLM 2024",
     status: "",
-    cited: 54,
+    cited: 56,
     thumb: "assets/papers/commonsense.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2406.07546",
     bullets: [
@@ -149,8 +149,8 @@ const PROFILE = {
   email: "muyuhe0327@gmail.com",
   x: "https://x.com/HeMuyu0327",
   github: "https://github.com/RiddleHe",
-  githubStars: 384,
+  githubStars: 388,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
-  citations: 87,
+  citations: 92,
   resume: "resume.pdf",
 };
