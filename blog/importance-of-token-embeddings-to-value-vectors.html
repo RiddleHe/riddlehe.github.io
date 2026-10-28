@@ -94,6 +94,74 @@
             </a>
           </figure>
         </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-10-26" data-source-url="https://x.com/HeMuyu0327/status/2114906699916263884">
+          <h2 class="entry-date-divider" id="entry-2026-10-26"><span>October 26, 2026</span></h2>
+
+          <p>I previously used singular value decomposition to demonstrate that in standard transformers, token embeddings highly align with value matrices&#x27; top input directions. But there is a more explicit demonstration -- training an attention residual model, but for QKV separately.</p>
+
+          <p>Whereas standard AttnRes learns a query for each layer to compute a weight combination of previous layer outputs, an AttnResQKV model learns one for each of Q, K, and V matrices, (and MLP). As a result, we can explicitly see whether the model is motivated to upweight / downweight specific layer outputs for the current QKV matrices.</p>
+
+          <p>We find that for both Q and K matrices, the first half of layers upweight token embeddings substantially. But more importantly, V matrices consistently upweight token embeddings across layers, to the point that other layers have any weights. The max attn score here can even be rounded to 1. This shows independently of the SVD analysis that, for transformer architectures, token embeddings are what value matrices want.</p>
+
+          <p>However, this does not prove that AttnResQKV can make sure of token embeddings, just like in standard transformers, we find that despite its high alignment, token embeddings have minimal output norm in value matrices. Therefore we need to do the same SVD + output norm analysis to establish its real contribution. If on a second model we find another alignment vs contribution discrepancy, it might signal limitations of transformer architectures.</p>
+
+          <p>For context. The importance of token embeddings to value vectors is already pretty established, such as in Value Residual Learning <a href="https://arxiv.org/abs/2410.17897">https://arxiv.org/abs/2410.17897</a>, nanochat arch, and my paper <a href="https://arxiv.org/abs/2606.02780">https://arxiv.org/abs/2606.02780</a>. However, all these work are ablation-heavy, so they kind of stumble upon this conclusion. The more interesting question to me is what fundamentally constrains transformers from using it properly without manual arch design, and whether we can therefore discover something much deeper.</p>
+
+          <p>Ongoing work.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114906699916263884-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114906699916263884-1.png" alt="D24 embedding and attention routing weights for Q, K, and V across receiving layers." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114906699916263884-2.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2114906699916263884-2.png" alt="D24 MLP-source routing weights for Q, K, and V across receiving layers." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-10-27" data-source-url="https://x.com/HeMuyu0327/status/2115251086072377852">
+          <h2 class="entry-date-divider" id="entry-2026-10-27"><span>October 27, 2026</span></h2>
+
+          <p>As I take it to be a central conflict in transformers that value matrices want token embeddings but cannot get them, I want to see if an AttnRes style model can &quot;get them&quot; by learning per-layer weights. But still, token embeddings make no contribution to their value matrices. This reveals a fundamental constraint in transformer design -- that token embeddings are forced to have tiny norms.</p>
+
+          <p>In the AttnRes model, we can see that although value matrices learn very large (in softmax attention like weights, that means close to 1) weights, their contribution to the value vector output norm is tiny. This means that even with the ability as well as the motivation to upweight token embeddings, they still cannot have an impact.</p>
+
+          <p>If we plot the L2 norm of each layer output, it is pretty evident why. We do norm(emb) immediately before the first layer, so token embeddings will have constant L2 norm equal to hidden_size. By contrast, later layer outputs do not have normalized length, so they become unbounded and can surpass token embeddings&#x27; norms.</p>
+
+          <p>In AttnRes-style model, both the paper and my experiment show that aside from the token embedding, other layers now have similar norms, instead of the exponential blowup in standard transformer. Yet because token embeddings are normalized, they will be instantly overwritten by any subsequent layers.</p>
+
+          <p>It is therefore a good experiment to see -- if AttnRes style model learn unbounded scalar weights for token embeddings, will it be very large and how large will it be? It will be pretty cool if it does become large and solve our no-contribution problem. That will be the call to do some arch mod.</p>
+
+          <p>Ongoing work.</p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-1.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-1.png" alt="D24 embedding and attention routing weights for Q, K, and V across receiving layers." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-2.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-2.jpg" alt="AttnRes QKV value-matrix raw-source projected squared norms for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-3.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-3.jpg" alt="Output magnitude and gradient magnitude versus transformer block index for two plotted model curves." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-4.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2115251086072377852-4.jpg" alt="AttnRes QKV mean raw source L2 norms for token embeddings and attention outputs across layers." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
