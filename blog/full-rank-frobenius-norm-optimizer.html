@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Deriving the full-rank solution to optimizer with frobenius norm constraints — Muyu He</title>
+  <title>Deriving the full-rank solution to optimizer with norm constraints — Muyu He</title>
   <link rel="icon" type="image/png" href="../assets/avatar.png" />
   <link rel="apple-touch-icon" href="../assets/avatar.png" />
   <meta name="description" content="The full-order exact solution when the Frobenius norm constraint is both on the matrix update and on the next updated matrix." />
@@ -22,7 +22,7 @@
 
     <article class="post">
       <a class="back-link" href="../blog.html">&larr; Blog</a>
-      <h1 class="post-h1">Deriving the full-rank solution to optimizer with frobenius norm constraints</h1>
+      <h1 class="post-h1">Deriving the full-rank solution to optimizer with norm constraints</h1>
       <p class="post-meta">September 10, 2026 &middot; Muyu He</p>
 
       <p>Given a weight matrix \(W\) and its gradient \(G\), we want to find an update \(\Delta W\) that minimizes the loss.</p>
@@ -39,7 +39,7 @@
       <p>Since \(\mathcal{L}(W)\) is fixed, we minimize the first-order term \(\langle G, \Delta W \rangle_F\). For a fixed \(\eta \gt 0\), substituting \(\Delta W = -\eta \Phi\) gives \(-\eta \langle G, \Phi \rangle_F\). Minimizing this negative product is therefore equivalent to maximizing \(\langle G, \Phi \rangle_F\).</p>
       <p>Since \(\langle G, \Phi \rangle_{F}\) is the dot product of the two flattened matrices and \(||\Phi||_F\) is the L2 norm of the flattened \(\Phi\), the constraint \(||\Phi||_F = 1\) is essentially the same as the L2 norm constraint on an update vector \(||\varphi||_2 = 1\).</p>
 
-      <h2>When the norm constraint is both on matrix update \(\Delta W\) and on next updated matrix \(W\)</h2>
+      <h2>When the Frobenius norm constraint is both on matrix update \(\Delta W\) and on next updated matrix \(W\)</h2>
       <p>The exact objective:</p>
       $$
       \begin{gathered}
@@ -156,7 +156,7 @@
       <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026frobeniusoptimizer,
   author = {He, Muyu},
-  title  = {Deriving the full-rank solution to optimizer with frobenius norm constraints},
+  title  = {Deriving the full-rank solution to optimizer with norm constraints},
   year   = {2026},
   url    = {https://riddlehe.github.io/blog/full-rank-frobenius-norm-optimizer.html}
 }</code></pre>

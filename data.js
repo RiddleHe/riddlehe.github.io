@@ -113,7 +113,7 @@ const POSTS = [
     blurb: "A fundamental constraint in transformers: token embeddings highly align with value matrices' input directions, yet have minimal contributions to outputs.",
   },
   {
-    title: "Deriving the full-rank solution to optimizer with frobenius norm constraints",
+    title: "Deriving the full-rank solution to optimizer with norm constraints",
     date: "2026-09-10",
     slug: "blog/full-rank-frobenius-norm-optimizer.html",
     blurb: "The full-order exact solution when the norm constraint is both on the matrix update and on the next updated matrix.",
