@@ -98,6 +98,61 @@
       \end{gathered}
       $$
 
+      <h2 id="spectral-and-frobenius-norm-constraints">When the norm constraint is on a matrix \(\Delta W \in \mathbb{R}^{n\times m}\) with both spectral norm \(||\cdot||_2\) and Frobenius norm \(||\cdot||_F\)</h2>
+      <p>The exact objective:</p>
+      $$
+      \max_{\Phi}\langle G, \Phi \rangle_{F} \ \  \ \text{s.t.} \ \ \ ||\Phi||_2 = ||\Phi||_F = 1
+      $$
+      <p>We can narrow the search of \(\Phi\) to rank-one matrices. For the SVD of \(\Phi = \sum_{i=1}^r s_i p_i q_i^T\) and singular values \(s_1 \gt s_2 \gt .. s_r\), we can derive:</p>
+      $$
+      \begin{gathered}
+      \because ||\Phi||_F^2 = \sum^r_{i=1} s_i^2 = 1  \ \text{ and } \ ||\Phi||_2 = s_1 = 1\\
+      \therefore s_2 = s_3 = ... = s_r = 0\\
+      \therefore \Phi = pq^T \text{ is a rank-one matrix with } p \in \mathbb{R}^{m}, q \in \mathbb{R}^{n}
+      \end{gathered}
+      $$
+      <p>We can optimize \(p\) based on the objective in terms of \(q\):</p>
+      $$
+      \begin{gathered}
+      \because \langle G, \Phi \rangle_F = \text{tr}(G^T\Phi)\\
+      = \text{tr}(G^Tpq^T)\\
+      = \text{tr}(q^TG^Tp)\\
+      = \text{tr}((Gq)^Tp)\\
+      = (Gq)^Tp\\
+      = p^TGq\\
+      \therefore \max_{||\Phi||_2=||\Phi||_F=1}  \langle G, \Phi \rangle_F =  \max_{||p||_2=||q||_2=1} p^T G q\\
+      \because p^T G q \leq ||p||_2 ||Gq||_2 = ||Gq||_2\\
+      \therefore p^* = \frac{Gq}{||Gq||_2}
+      \end{gathered}
+      $$
+      <p>Having \(p\) fixed, we can then optimize \(q\):</p>
+      $$
+      \begin{gathered}
+      \max_{||\Phi||_2=||\Phi||_F=1}  \langle G, \Phi \rangle_F \models \max_{||q||_2=1}  ||Gq||_2\\
+      \because G = \sum^r_i \sigma_i u_i v_i^T\\
+      \text{for rank } r \text{ in dimension n}\\
+      \therefore Gq = \sum^r_i \sigma_i u_i (v_i^T q)\\
+      =  \sum^r_i \sigma_i(v_i^T q) \ u_i\\
+      \because u_i \perp u_j \ \text{for } i \neq j\\
+      \therefore \text{Pythagorean theoream}: ||Gq||^2_2 = \sum^r_i \sigma_i^2(v_i^T q)^2 \ ||u_i||^2_2\\
+      =  \sum^r_i \sigma_i^2(v_i^T q)^2 \cdot 1\\
+      = \sum^r_i \sigma_i^2(v_i^T q)^2\\
+      \leq \sigma_1 \sum^r_i (v_i^T q)^2\\
+      \text{for } \ \sigma_1 \gt \sigma_2 \gt ... \gt \sigma_r\\
+      \because q \ \text{spans across the subspace also spanned by } v_1, v_2, ..., v_r, ..., v_n\\
+      \therefore \text{Pythagorean theoream}: ||q||^2_2 = \sigma_1 \sum^n_i (v_i^T q)^2\\
+      \therefore ||Gq||^2_2 \leq \sigma_1 \sum^r_i (v_i^T q)^2\\
+      \leq \sigma_1 ||q||^2_2\\
+      = \sigma_1 \cdot 1\\
+      = \sigma_1\\
+      \because \text{if } q = v_1, \ ||Gq||^2_2 = \sum^r_i \sigma_i^2 (v_i^T v_1)^2\\
+      = 0 + 0 + ... + \sigma_i^2 ||v_1||^2_2\\
+      = \sigma_1\\
+      \therefore q^* = v_1
+      \end{gathered}
+      $$
+      <p>Therefore, the optimal \(\Phi^* = u_1v_1^T\).</p>
+
       <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026frobeniusoptimizer,
   author = {He, Muyu},
