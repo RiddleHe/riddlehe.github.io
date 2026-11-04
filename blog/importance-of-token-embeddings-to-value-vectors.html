@@ -162,6 +162,71 @@
             </a>
           </figure>
         </section>
+        <section class="research-entry" aria-labelledby="entry-2026-11-02" data-source-url="https://x.com/HeMuyu0327/status/2117487064648401399">
+          <h2 class="entry-date-divider" id="entry-2026-11-02"><span>November 2, 2026</span></h2>
+
+          <p>I previously found that despite value matrices&#x27; singular vectors being highly aligned with token embeddings, nanochat&#x27;s normalization of token embeddings constrains them to tiny norms, leading to no contribution in producing value vectors. Since frontier LLMs do not norm their embeddings, I removed the norm to see if this leads to a higher utilization of token embeddings in value matrices.</p>
+
+          <p>The result is negative. Despite token embeddings having a pretty decent norm similar to other attention outputs in layers up to L8, they still make up for very little share of value vectors&#x27; squared output norms, especially after L10 where it is below a baseline of uniformly dividing the share among every layer.</p>
+
+          <p>This does not sit right with the fact that with normalization removed, value matrices&#x27; top singular vectors are still highly aligned with token embeddings, pointing to a mismatch of what value matrices need vs are given.</p>
+
+          <p>The reason why token embeddings still have tiny contribution is that other key layer outputs, particularly attention outputs, are still larger in norm. For example, L0&#x27;s attention output has a much larger norm, and therefore contributes much more to value vector&#x27;s squared output norm despite much lower alignment.</p>
+
+          <p>The fundamental constraint behind seems to be that standard transformers are motivated to have an exponentially increasing L2 norm of each layer. With token embeddings&#x27; norm removed, we actually see that later layer such as L0&#x27;s norm increase from the baseline, showing that the model wants to keep late layers to have larger norms anyway. This is what renders the removal of normalization ineffective.</p>
+
+          <p>Ongoing work. Blog: <a href="https://riddlehe.github.io/blog/importance-of-token-embeddings-to-value-vectors.html">https://riddlehe.github.io/blog/importance-of-token-embeddings-to-value-vectors.html</a></p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-1.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-1.jpg" alt="Embedding and attention-output L2 norms across layers, comparing GPTBase with a model without embedding normalization." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-2.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-2.jpg" alt="Value projected energy shares of embeddings and the first attention output across receiving layers, with and without embedding normalization, compared with a uniform-share baseline." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-3.png" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-3.png" alt="Value input alignment without embedding normalization for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-4.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117487064648401399-4.jpg" alt="Value projected squared norms without embedding normalization for token embeddings and attention outputs at layers 12, 14, 16, 18, 20, and 22." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
+
+        <section class="research-entry" aria-labelledby="entry-2026-11-03" data-source-url="https://x.com/HeMuyu0327/status/2117822545978421422">
+          <h2 class="entry-date-divider" id="entry-2026-11-03"><span>November 3, 2026</span></h2>
+
+          <p>Since token embeddings are highly aligned with the singular vectors of value matrices, what is their layout in the hidden space, and is this layout predictable for value matrices? If they do not have an identifiable layout, it is hard to explain how they align well with fixed directions in the subspace spanned by value matrices&#x27; singular vectors.</p>
+
+          <p>On nanochat, I found that embeddings concentrate on a small subset of directions. Only 11% of the top principal components of the embedding space explains 50% of all token embeddings (vocab size 32k)&#x27;s variances, and 56% explains 90%. The top 2-3 principal components are much larger than the rest, and their explained variance logarithmically decreases afterwards.</p>
+
+          <p>This shows that a small number of concentrated directions encode disproportionately rich semantic information, with only a handful of directions encoding much more than the rest. This does not mean that the rest of the directions are useless -- for example, a direction with low variance might simply cluster embeddings into two groups, encoding a binary decision.</p>
+
+          <p>Overall, this confirms that value matrices can use the privileged principal components to align its singular vectors, while it does not mean it actually uses it. That will belong to another straightforward experiment.</p>
+
+          <p>Ongoing work. Blog writeup: <a href="https://riddlehe.github.io/blog/importance-of-token-embeddings-to-value-vectors.html">https://riddlehe.github.io/blog/importance-of-token-embeddings-to-value-vectors.html</a></p>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117822545978421422-1.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117822545978421422-1.jpg" alt="Cumulative variance explained by vocabulary embedding principal components in GPTBase D24: 182 directions explain 50% and 866 explain 90%." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+
+          <figure class="research-figure">
+            <a href="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117822545978421422-2.jpg" target="_blank" rel="noopener">
+              <img src="../assets/blog/importance-of-token-embeddings-to-value-vectors/2117822545978421422-2.jpg" alt="Variance explained per vocabulary embedding principal component in GPTBase D24, decreasing from 1.744% for the first direction to 0.0073% for direction 1,536." width="640" loading="lazy" decoding="async" />
+            </a>
+          </figure>
+        </section>
       </div>
 
       <h2 class="citation-heading">Citation</h2>
