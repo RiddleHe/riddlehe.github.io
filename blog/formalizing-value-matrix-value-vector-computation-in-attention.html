@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formalizing value matrix / value vector computation in attention — Muyu He</title>
+  <link rel="icon" type="image/png" href="../assets/avatar.png" />
+  <link rel="apple-touch-icon" href="../assets/avatar.png" />
+  <meta name="description" content="Formalizing value matrix / value vector computation in attention" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+</head>
+<body>
+  <main class="page">
+    <nav class="topnav">
+      <a href="../index.html">Home</a>
+      <a href="../blog.html" class="active">Blog</a>
+    </nav>
+
+    <article class="post">
+      <a class="back-link" href="../blog.html">&larr; Blog</a>
+      <h1 class="post-h1">Formalizing value matrix / value vector computation in attention</h1>
+      <p class="post-meta">November 11, 2026 &middot; Muyu He</p>
+
+      <!-- Source: Obsidian Learnings; wording and math preserved. -->
+      <p>We can always write the output of attention as the sum across heads of the weighted average of each token under a linear transformation \(W_{o,i} \ W_{v,i}\) at head \(i\). Formally, the contribution of a single token \(x\) to the attention output is:</p>
+
+      $$
+\begin{gathered}
+\sum_{i}^{n\_\text{head}} \left( W_{o,i} \ (\text{attn}_i \cdot W_{v,i} \ x) \right) \\ = \sum_{i}^{n\_\text{head}} \text{attn}_i \cdot \left( W_{o,i} \ W_{v,i} \ x \right)
+\end{gathered}
+      $$
+
+      <p><strong>Low-rank parametrization.</strong> This means that equivalently, we can see attention as follows: before each token&#x27;s information \(x\) is weighted averaged within head by attention and then summed across head, it goes through a single low rank matrix \(W_{o,i}&#x27; = W_{o,i} \ W_{v,i}\). This means it does an one-time rotation in a low rank space, where the rotation depends on interactions across all dimensions in \(x\) by virtue of matrix-vector multiplication. Since we have \(n_\text{head}\) of these rotations, the composite rotation is again full-rank in \(\text{head}\_\text{dim} \times n\_\text{head} = \text{hidden}\_\text{dim}\).</p>
+
+      <p><strong>Sharing the rotation across heads.</strong> Alternatively, then, we can simply define a single, shared \(W_o\) across heads, so all heads share the same channel-dependent rotation. Since \(W_o\) is not parametrized by a pair of rectangular matrices, it is not low-rank. So the rotation will happen in full-rank hidden space. Formally:</p>
+
+      $$
+\begin{gathered}
+\sum_{i}^{n\_\text{head}} \text{attn}_i \left( W_o \ x \right) \\ = W_o \ x  \ \sum_{i}^{n\_\text{head}} \text{attn}_i
+\end{gathered}
+      $$
+
+      <ul>
+        <li><p>As \(W_o\) is shared, the attention operation is reduced to just summing \(x\)&#x27;s attention scores across heads and scaling a one-time linear transformation \(W_o \ x\).</p></li>
+      </ul>
+
+      <p><strong>Reintroducing head-specific rotation.</strong> The limitation of using a single, shared \(W_o\) is that there is no head-specific rotation of \(x\), which was made possible by \(W_v\). If we do not want to reintroduce the matrix \(W_v\), we can instead introduce a scaling vector per head, \(v_{\text{scale}}\), to do element-wise multiplication with \(x\). This enables a head-specific rotation of \(x\), with the caveat that the rotation does not depend on interactions across dimensions in \(x\). So in total, \(x\) goes through two rotations: a head-specific, channel-independent rotation first, and a head-general, channel-independent rotation second, both in full-rank hidden space. Formally:</p>
+
+      $$
+\sum_{i}^{n\_\text{head}} \text{attn}_i \cdot \left( W_{o} \ ( v_{\text{scale},i} \odot x ) \right)
+      $$
+
+      <h2 class="citation-heading">Citation</h2>
+      <pre><code>@misc{he2026valuecomputation,
+  author = {He, Muyu},
+  title  = {Formalizing value matrix / value vector computation in attention},
+  year   = {2026},
+  url    = {https://riddlehe.github.io/blog/formalizing-value-matrix-value-vector-computation-in-attention.html}
+}</code></pre>
+
+      <a class="back-link post-footer-link" href="../blog.html">&larr; Back to all posts</a>
+    </article>
+
+    <footer class="footer">Muyu He &copy; 2026</footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <script>
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "\\(", right: "\\)", display: false }
+      ],
+      throwOnError: false
+    });
+  </script>
+</body>
+</html>
