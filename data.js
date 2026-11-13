@@ -107,7 +107,7 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
-    title: "Formalizing value matrix / value vector computation in attention",
+    title: "Formalizing value matrix computation in attention",
     date: "2026-11-11",
     slug: "blog/formalizing-value-matrix-value-vector-computation-in-attention.html",
     blurb: "Low-rank parametrization. Sharing the rotation across heads. Reintroducing head-specific rotation.",
