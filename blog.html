@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20261113-archive" />
 </head>
 <body>
   <main class="page">
@@ -21,14 +21,17 @@
     <header class="masthead">
       <h1 class="name">Blog</h1>
     </header>
-    <p class="blog-sub">Research notes and derivations, written up as I go.</p>
-
     <div class="post-list" id="post-list"></div>
+
+    <details class="blog-archive">
+      <summary>Archived</summary>
+      <div class="post-list" id="archived-post-list"></div>
+    </details>
 
     <footer class="footer">Muyu He &copy; 2026</footer>
   </main>
 
-  <script src="data.js?v=20261027-metrics"></script>
-  <script src="blog.js"></script>
+  <script src="data.js?v=20261113-archive"></script>
+  <script src="blog.js?v=20261113-archive"></script>
 </body>
 </html>

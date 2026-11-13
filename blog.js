@@ -1,4 +1,4 @@
-// Render the blog index list from POSTS (data.js).
+// Render active and archived blog posts from POSTS (data.js).
 
 const esc = (s) =>
   String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -20,4 +20,5 @@ function postRow(p) {
     </a>`;
 }
 
-document.getElementById("post-list").innerHTML = POSTS.map(postRow).join("");
+document.getElementById("post-list").innerHTML = POSTS.filter((p) => !p.archived).map(postRow).join("");
+document.getElementById("archived-post-list").innerHTML = POSTS.filter((p) => p.archived).map(postRow).join("");

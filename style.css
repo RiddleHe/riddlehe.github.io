@@ -220,12 +220,20 @@ body {
 }
 
 /* ---- Blog index ---- */
-.blog-sub {
-  margin: -0.4rem 0 1.8rem;
-  color: var(--muted);
-  font-style: italic;
-  font-size: 1rem;
+.blog-archive { margin-top: 2rem; }
+.blog-archive > summary {
+  padding: 0.6rem 0;
+  font-family: var(--sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--clay);
+  cursor: pointer;
 }
+.blog-archive > summary:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 4px;
+}
+.blog-archive[open] > summary { margin-bottom: 0.6rem; }
 .post-list { display: flex; flex-direction: column; }
 .post-row {
   display: flex;

@@ -114,6 +114,7 @@ const POSTS = [
   },
   {
     title: "The importance of token embeddings to value vectors",
+    archived: true,
     date: "2026-10-24",
     slug: "blog/importance-of-token-embeddings-to-value-vectors.html",
     blurb: "A fundamental constraint in transformers: token embeddings highly align with value matrices' input directions, yet have minimal contributions to outputs.",
@@ -126,6 +127,7 @@ const POSTS = [
   },
   {
     title: "Disabling Attention Layers",
+    archived: true,
     date: "2026-08-25",
     slug: "blog/disabling-attention-layers.html",
     blurb: "Only a very small number of final attention layers are necessary—but not sufficient—for extracting entity information from context.",
@@ -138,6 +140,7 @@ const POSTS = [
   },
   {
     title: "Gated Transformer",
+    archived: true,
     date: "2026-08-14",
     slug: "blog/gated-transformer.html",
     blurb: "An ongoing chronicle of the motivation, experiments, and finding of a transformer model that can scale each block output by a learned gate value.",
