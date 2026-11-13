@@ -34,7 +34,7 @@
 \end{gathered}
       $$
 
-      <p><strong>Low-rank parametrization.</strong> This means that equivalently, we can see attention as follows: before each token&#x27;s information \(x\) is weighted averaged within head by attention and then summed across head, it goes through a single low rank matrix \(W_{o,i}&#x27; = W_{o,i} \ W_{v,i}\). This means it does an one-time rotation in a low rank space, where the rotation depends on interactions across all dimensions in \(x\) by virtue of matrix-vector multiplication. Since we have \(n\_\text{head}\) of these rotations, the composite rotation is again full-rank in \(\text{head}\_\text{dim} \times n\_\text{head} = \text{hidden}\_\text{dim}\).</p>
+      <p><strong>Low-rank parametrization.</strong> This means that equivalently, we can see attention as follows: before each token&#x27;s information \(x\) is weighted averaged within head by attention and then summed across head, it goes through a single low rank matrix \(W_{o,i}&#x27; = W_{o,i} \ W_{v,i}\). This means it does an one-time rotation in a low rank space, where the rotation depends on interactions across all dimensions in \(x\) by virtue of matrix-vector multiplication. Since we have \(n\_\text{head}\) of these rotations, the composite rotation is again full-rank in \(\text{d}\_\text{head} \times n\_\text{head} = \text{hidden}\_\text{dim}\).</p>
 
       <p><strong>Variant 1: Sharing the rotation across heads.</strong> Alternatively, then, we can simply define a single, shared \(W_o\) across heads, so all heads share the same channel-dependent rotation. Since \(W_o\) is not parametrized by a pair of rectangular matrices, it is not low-rank. So the rotation will happen in full-rank hidden space. Formally:</p>
 
@@ -54,13 +54,21 @@
 
       <p>The tradeoff is that in this formulation, the FLOPs unfairly increases from the baseline. For each head, rather than computing the low-rank transformation \((W_{o,i} \ W_{v,i} \ x)\) in \([\text{d}\_\text{hidden} \rightarrow \text{d}\_\text{head} \rightarrow \text{d}\_\text{hidden}]\), it instead computes the full-rank transformation \((W_{o} \ ( v_{\text{scale},i} \odot x ))\) in \([\text{d}\_\text{hidden} \rightarrow \text{d}\_\text{hidden} \rightarrow \text{d}\_\text{hidden}]\).</p>
 
-      <p><strong>Variant 3:</strong> To maintain or even reduce FLOPs in the \(v_{\text{scale}}\) design, we can partition the input \(x\) into \(n\_\text{head}\) chunks. Each head gets its chunk and a \(v_{\text{scale}}\) in \(\text{d}\_\text{head}\). Each head chunk eventually goes through the same rectangular \(W_o\) of shape \((\text{d}\_\text{hidden} \times \text{d}\_\text{head})\). Formally:</p>
+      <p><strong>Variant 3: Making the head-specific rotation low-rank.</strong> To maintain or even reduce FLOPs in the \(v_{\text{scale}}\) rotation in variant 2, we can partition the input \(x\) into \(n\_\text{head}\) chunks. Each head gets its chunk and a \(v_{\text{scale}}\) in \(\text{d}\_\text{head}\). Each head chunk eventually goes through the same rectangular \(W_o\) of shape \((\text{d}\_\text{hidden} \times \text{d}\_\text{head})\). Formally:</p>
 
       $$
 \sum_{i}^{n\_\text{head}} \text{attn}_i \cdot \left( W_{o} \ ( v_{\text{scale},i} \odot x_{[i:i+1]} ) \right)
       $$
 
       <p>So in total, for each head, \(x\) goes through two rotations: a head-specific, channel-independent rotation first, and a head-general, channel-independent rotation second, both in \(\text{d}\_\text{head}\).</p>
+
+      <p><strong>Variant 4: Removing multi-head design.</strong> If we adhere to the standalone head-sharing \(W_o\) in variant 1, multiple attention heads only contribute attention scores that will be summed, and no longer contribute head-specific rotation. Since any head is expressive enough for the same relative attention score patterns across tokens in the summed scores, but not expressive enough for the absolute attention score patterns because the summed scores might exceed 1, we can remove multi-head to use a single head to learn the relative attentions score pattern, and then use a scalar to scale to the desired absolute attention score patterns. Formally, each token&#x27;s contribution to the attention output is:</p>
+
+      $$
+\text{attn}  \ \cdot \ a_{\text{scale}} \ \cdot \ W_o \ x
+      $$
+
+      <p><strong>Variant 5: Removing softmax attention.</strong> We observe that a fine-grained attention score -- defined as one that is precise to the value in an order of magnitude, eg. 0.3 vs 0.7 in \(10^{-2}\), will have limited impact on the token&#x27;s contribution to the attention output. This is because change in attention score within an order of magnitude can at most change the norm of its output contribution also within an order of magnitude. And between two attention scores of two tokens, the more orders of magnitude they are apart, the less the change in one&#x27;s attention score within an order of magnitude will impact their relative contribution. As a result, if we have an indexer to rank all key tokens, we can assign their attention according to a empirically motivated distribution, so that they naturally fall into different orders of magnitude aligned with what is empirically observed. Therefore, we can remove softmax&#x27;s computation of the fine-grained attention score.</p>
 
       <h2 class="citation-heading">Citation</h2>
       <pre><code>@misc{he2026valuecomputation,
