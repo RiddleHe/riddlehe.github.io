@@ -107,10 +107,10 @@ const PAPERS = [
 // Blog posts. Order = display order (newest first).
 const POSTS = [
   {
-    title: "Formalizing value matrix computation in attention",
+    title: "Reducing expressiveness of formalized attention ops",
     date: "2026-11-11",
     slug: "blog/formalizing-value-matrix-value-vector-computation-in-attention.html",
-    blurb: "Low-rank parametrization. Sharing the rotation across heads. Reintroducing head-specific rotation.",
+    blurb: "The reduced expressiveness trades off with lower training FLOPs and/or lower inference memory utilization, for example by -- in the case shown below -- removing the value matrix.",
   },
   {
     title: "The importance of token embeddings to value vectors",
