@@ -26,9 +26,9 @@
       <p class="post-meta">November 11, 2026 &middot; Muyu He</p>
 
       <!-- Source: Obsidian Learnings; wording and math preserved. -->
-      <p>Motivation. As opposed to defining architectural modifications that increase the expressiveness of attention, we are motivated to define ones that reduce the expressiveness in the least intrusive ways, supported by a formal view of attention computation. The reduced expressiveness trades off with lower training FLOPs and/or lower inference memory utilization, for example by -- in the case shown below -- removing the value matrix. This establishes a novel axis of scaling in that reducing expressiveness does not automatically mean reducing width, depth, data, or loops. This technique can be useful if applied to attention layers that potentially benefit less from channel mixing than others, such as the type studied in my <a href="https://arxiv.org/abs/2606.02780">paper</a>.</p>
+      <p><strong>Motivation.</strong> As opposed to defining architectural modifications that increase the expressiveness of attention, we are motivated to define ones that reduce the expressiveness in the least intrusive ways, supported by a formal view of attention computation. The reduced expressiveness trades off with lower training FLOPs and/or lower inference memory utilization, for example by -- in the case shown below -- removing the value matrix. This establishes a novel axis of scaling in that reducing expressiveness does not automatically mean reducing width, depth, data, or loops. This technique can be useful if applied to attention layers that potentially benefit less from channel mixing than others, such as the type studied in my <a href="https://arxiv.org/abs/2606.02780">paper</a>.</p>
 
-      <p>Formal view of attention. We can always write the output of attention as the sum across heads of the weighted average of each token under a linear transformation \(W_{o,i} \ W_{v,i}\) at head \(i\). Formally, the contribution of a single token \(x\) to the attention output is:</p>
+      <p><strong>Formal view of attention.</strong> We can always write the output of attention as the sum across heads of the weighted average of each token under a linear transformation \(W_{o,i} \ W_{v,i}\) at head \(i\). Formally, the contribution of a single token \(x\) to the attention output is:</p>
 
       $$
 \begin{gathered}
@@ -36,7 +36,7 @@
 \end{gathered}
       $$
 
-      <p>Low-rank parametrization of attention. This means that equivalently, we can see attention as follows: before each token&#x27;s information \(x\) is weighted averaged within head by attention and then summed across head, it goes through a single low rank matrix \(W_{o,i}&#x27; = W_{o,i} \ W_{v,i}\). This means it does an one-time rotation in a low rank space, where the rotation depends on interactions across all dimensions in \(x\) by virtue of matrix-vector multiplication. Since we have \(n\_\text{head}\) of these rotations, the composite rotation is again full-rank in \(\text{d}\_\text{head} \times n\_\text{head} = \text{hidden}\_\text{dim}\).</p>
+      <p><strong>Low-rank parametrization of attention.</strong> This means that equivalently, we can see attention as follows: before each token&#x27;s information \(x\) is weighted averaged within head by attention and then summed across head, it goes through a single low rank matrix \(W_{o,i}&#x27; = W_{o,i} \ W_{v,i}\). This means it does an one-time rotation in a low rank space, where the rotation depends on interactions across all dimensions in \(x\) by virtue of matrix-vector multiplication. Since we have \(n\_\text{head}\) of these rotations, the composite rotation is again full-rank in \(\text{d}\_\text{head} \times n\_\text{head} = \text{hidden}\_\text{dim}\).</p>
 
       <p><strong>Variant 1: Sharing the rotation across heads.</strong> Alternatively, then, we can simply define a single, shared \(W_o\) across heads, so all heads share the same channel-dependent rotation. Since \(W_o\) is not parametrized by a pair of rectangular matrices, it is not low-rank. So the rotation will happen in full-rank hidden space. Formally:</p>
 
