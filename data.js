@@ -4,7 +4,7 @@ const REPOS = [
   {
     name: "nanochat",
     owner: "RiddleHe",
-    stars: 60,
+    stars: 61,
     url: "https://github.com/RiddleHe/nanochat",
     bullets: [
       "Hackable pretraining stack from karpathy/nanochat with easy architecture definition and FLOP-controlled ablations",
@@ -34,7 +34,7 @@ const REPOS = [
   {
     name: "gpt-oss-alignment",
     owner: "RiddleHe",
-    stars: 124,
+    stars: 126,
     url: "https://github.com/RiddleHe/gpt-oss-alignment",
     bullets: [
       "Jailbreak via chat-template removal, exposing the fragility of post-trained alignment",
@@ -60,7 +60,7 @@ const PAPERS = [
     title: "YC-Bench: Benchmarking AI Agents for Long-Term Planning and Consistent Execution",
     venue: "COLM 2026",
     status: "",
-    cited: 7,
+    cited: 10,
     thumb: "assets/papers/yc-bench.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2604.01212",
     bullets: [
@@ -95,7 +95,7 @@ const PAPERS = [
     title: "Commonsense-T2I: Can Text-to-Image Models Understand Commonsense?",
     venue: "COLM 2024",
     status: "",
-    cited: 56,
+    cited: 57,
     thumb: "assets/papers/commonsense.png?v=20260821-fig1",
     url: "https://arxiv.org/abs/2406.07546",
     bullets: [
@@ -158,8 +158,8 @@ const PROFILE = {
   email: "muyuhe0327@gmail.com",
   x: "https://x.com/HeMuyu0327",
   github: "https://github.com/RiddleHe",
-  githubStars: 388,
+  githubStars: 391,
   scholar: "https://scholar.google.com/citations?hl=en&authuser=1&user=__oJ4oQAAAAJ",
-  citations: 92,
+  citations: 98,
   resume: "resume.pdf",
 };
